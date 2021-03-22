@@ -1,7 +1,7 @@
 /**
  * @file Socket.cpp
  * @author kaoru (shiina_kaoru@outlook.com)
- * @brief 套接字定义
+ * @brief TCP套接字定义
  * @version 0.1
  * @date 2021-03-22
  * 

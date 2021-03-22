@@ -1,7 +1,7 @@
 /**
  * @file Socket.hpp
  * @author kaoru (shiina_kaoru@outlook.com)
- * @brief 套接字声明
+ * @brief TCP套接字声明
  * @version 0.1
  * @date 2021-03-22
  * 
