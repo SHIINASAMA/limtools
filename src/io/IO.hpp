@@ -35,4 +35,10 @@ public:
      * @return HANDLE 输出句柄
      */
     static HANDLE GetOutputHandle();
+
+    /**
+     * @brief 销毁IO句柄
+     * 
+     */
+    static void DisposeHandle();
 };
