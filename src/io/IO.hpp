@@ -21,8 +21,6 @@ private:
     static HANDLE inputHandle;
     static HANDLE outputHandle;
 
-    IO();
-    ~IO();
 public:
     /**
      * @brief 获取输入句柄

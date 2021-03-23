@@ -14,20 +14,16 @@
 HANDLE IO::inputHandle;
 HANDLE IO::outputHandle;
 
-IO::IO(){
-    inputHandle = GetStdHandle(STD_INPUT_HANDLE);
-    outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-}
-
-IO::~IO(){
-    CloseHandle(inputHandle);
-    CloseHandle(outputHandle);
-}
-
 HANDLE IO::GetInputHandle(){
+    if(inputHandle == NULL){
+        inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+    }
     return inputHandle;
 }
 
 HANDLE IO::GetOutputHandle(){
+    if(outputHandle == NULL){
+        outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    }
     return outputHandle;
 }
