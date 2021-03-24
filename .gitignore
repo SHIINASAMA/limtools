@@ -1,2 +1,12 @@
 build
 .vscode
+CMakeFiles
+Testing
+Makefile
+
+*
+*.a
+*.so
+*.lib
+*.dll
+*.cmake

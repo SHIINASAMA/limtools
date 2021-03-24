@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2021
  * 
  */
-
+#ifdef _WIN32
 #include "IO.hpp"
 
 HANDLE IO::inputHandle;
@@ -27,3 +27,4 @@ HANDLE IO::GetOutputHandle(){
     }
     return outputHandle;
 }
+#endif
