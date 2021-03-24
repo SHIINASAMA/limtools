@@ -174,3 +174,31 @@ void Console::Write(const char *fmt, ...)
     va_end(args);
     Print(temp);
 }
+
+void Console::Read(const char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    vscanf(fmt, args);
+    va_end(args);
+}
+
+void Console::Put(long l, int radix)
+{
+    char temp[33];
+    ltoa(l, temp, radix);
+    Print(temp);
+}
+
+void Console::Put(double d)
+{
+    char temp[33];
+    sprintf(temp, "%lf", d);
+    Print(temp);
+}
+
+void Console::Put(char c)
+{
+    char temp[2]{c, '\0'};
+    Print(temp);
+}
