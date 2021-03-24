@@ -11,134 +11,121 @@
 
 #include "Console.hpp"
 
-#ifdef _WIN32
-#include "IO.hpp"
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdarg.h>
-#elif __linux__
-#endif
-
-void Console::Put(char *str)
+void Console::Print(const char *str)
 {
 #ifdef _WIN32
     DWORD len;
-    WriteConsole(IO::GetOutputHandle(),
-                 str,
-                 strlen(str),
-                 &len,
-                 NULL);
+    WriteConsole(IO::GetOutputHandle(), str, strlen(str), &len, NULL);
 #elif __linux__
+    write(0, str, strlen(str));
 #endif
 }
 
-void Console::Put(char ch)
+void Console::FormatWrite(char *buf, const char *fmt, va_list args)
 {
-#ifdef _WIN32
-    DWORD len;
-    WriteConsole(IO::GetOutputHandle(),
-                 &ch,
-                 1,
-                 &len,
-                 NULL);
-#elif __linux__
-#endif
-}
-
-void Console::Put(long l, int radix)
-{
-    char str[32];
-    ltoa(l, str, radix);
-    Put(str);
-}
-
-// void Console::Put(unsigned long l, int radix)
-// {
-//     char str[32];
-//     ultoa(l, str, radix);
-//     Put(str);
-// }
-
-void Console::Put(double d)
-{
-    char str[32];
-    sprintf(str, "%lf", d);
-    Put(str);
-}
-
-void Console::Write(const char *str, ...)
-{
-    va_list args;
-    va_start(args, str);
-    while (*str)
+    while (*fmt)
     {
-        char ch = *str;
-        if (ch == '%')
+        if (*fmt == '%')
         {
-            switch (*(++str))
+            fmt++;
+            switch (*fmt)
             {
-            case '%': //百分号
+            case '%':
             {
-                Put('%');
-                str++;
+                *buf = '%';
+                buf++;
+                fmt++;
                 break;
             }
-            case 's': //字符串
+            case 'b':
             {
-                char *str = va_arg(args, char *);
-                Put(str);
-                str++;
-                break;
-            }
-            case 'd': //十进制整型
-            {
+                char temp[33];
                 long l = va_arg(args, long);
-                Put(l, 10);
-                str++;
+                ltoa(l, temp, 2);
+                int len = strlen(temp);
+                strcpy(buf, temp);
+                buf += len;
+                fmt++;
                 break;
             }
-            case 'x': //十六进制整型
+            case 'o':
             {
+                char temp[33];
                 long l = va_arg(args, long);
-                Put(l, 16);
-                str++;
+                ltoa(l, temp, 8);
+                int len = strlen(temp);
+                strcpy(buf, temp);
+                buf += len;
+                fmt++;
                 break;
             }
-            case 'o': //八进制整型
+            case 'd':
             {
+                char temp[33];
                 long l = va_arg(args, long);
-                Put(l, 8);
-                str++;
+                ltoa(l, temp, 10);
+                int len = strlen(temp);
+                strcpy(buf, temp);
+                buf += len;
+                fmt++;
                 break;
             }
-            case 'b': //二进制整型
+            case 'x':
             {
+                char temp[33];
                 long l = va_arg(args, long);
-                Put(l, 2);
-                str++;
+                ltoa(l, temp, 16);
+                int len = strlen(temp);
+                strcpy(buf, temp);
+                buf += len;
+                fmt++;
                 break;
             }
-            case 'c': //字符
+            case 'f':
             {
-                char ch = va_arg(args, int);
-                Put(ch);
-                str++;
-                break;
-            }
-            case 'f': //浮点型
-            {
+                char temp[33];
                 double d = va_arg(args, double);
-                Put(d);
-                str++;
+                sprintf(temp, "%lf", d);
+                int len = strlen(temp);
+                strcpy(buf, temp);
+                buf += len;
+                fmt++;
+                break;
+            }
+            case 's':
+            {
+                char *temp = va_arg(args, char *);
+                int len = strlen(temp);
+                strcpy(buf, temp);
+                buf += len;
+                fmt++;
+                break;
+            }
+            case 'c':
+            {
+                int temp = va_arg(args, int);
+                *buf = (char)temp;
+                buf++;
+                fmt++;
                 break;
             }
             }
         }
         else
         {
-            Put(ch);
-            str++;
+            *buf = *fmt;
+            buf++;
+            fmt++;
         }
-        va_end(args);
     }
+}
+
+void Console::Write(const char *fmt, ...)
+{
+    char temp[1024];
+    va_list args;
+    va_start(args, fmt);
+    FormatWrite(temp, fmt, args);
+    va_end(args);
+    Print(temp);
 }

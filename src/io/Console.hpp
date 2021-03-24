@@ -9,44 +9,66 @@
  * 
  */
 
+#ifdef _WIN32
+#include "IO.hpp"
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+#elif __linux__
+char *ltoa(long value, char *string, int radix)
+{
+    char tmp[33];
+    char *tp = tmp;
+    long i;
+    unsigned long v;
+    int sign;
+    char *sp;
+
+    if (radix > 36 || radix <= 1)
+    {
+        __set_errno(EDOM);
+        return 0;
+    }
+
+    sign = (radix == 10 && value < 0);
+    if (sign)
+        v = -value;
+    else
+        v = (unsigned long)value;
+    while (v || tp == tmp)
+    {
+        i = v % radix;
+        v = v / radix;
+        if (i < 10)
+            *tp++ = i + '0';
+        else
+            *tp++ = i + 'a' - 10;
+    }
+
+    if (string == 0)
+        string = (char *)malloc((tp - tmp) + sign + 1);
+    sp = string;
+
+    if (sign)
+        *sp++ = '-';
+    while (tp > tmp)
+        *sp++ = *--tp;
+    *sp = 0;
+    return string;
+}
+#endif
+
+
 /**
  * @brief 控制台库
  * 
  */
-class Console{
-private:
-    static void Put(char* str);
-
+class Console
+{
 public:
-    /**
-     * @brief 输出一个浮点数
-     * 
-     * @param d 目标浮点数
-     */
-    static void Put(double d);
+    static void Print(const char *str);
 
-    /**
-     * @brief 输出一个整型
-     * 
-     * @param l 目标整型
-     * @param raidx 目标进制
-     */
-    static void Put(long l,int raidx = 10);
+    static void FormatWrite(char *buf, const char *fmt, va_list args);
 
-    // static void Put(unsigned long l,int raidx = 10);
-
-    /**
-     * @brief 输出一个字符
-     * 
-     * @param ch 目标字符
-     */
-    static void Put(char ch);
-
-    /**
-     * @brief 格式化输出语句
-     * 
-     * @param str 格式语句
-     * @param ... 参数
-     */
-    static void Write(const char* str,...);
+    static void Write(const char *fmt, ...);
 };
