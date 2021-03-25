@@ -23,9 +23,10 @@ int main()
 
 #ifdef test_colorful
     using Colors = Console::Colors;
-    Colors fontColor = Colors::Red;
-    Colors bkColor = Colors::Blue;
+    Colors fontColor = Colors::White;
+    Colors bkColor = Colors::Red;
     Console::WriteColorful("Hello", fontColor, bkColor);
+    Console::NewLine();
     return 0;
 #endif
 

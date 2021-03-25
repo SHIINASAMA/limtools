@@ -203,7 +203,8 @@ void Console::Put(char c)
     Print(temp);
 }
 
-void Console::NewLine(){
+void Console::NewLine()
+{
     Print("\n");
 }
 
@@ -226,6 +227,12 @@ void Console::WriteColorful(const char *str, Colors fontColor, Colors bkColor)
     Print(str);
     ClearColor();
 #elif __linux__
-
+    char bk[3];
+    ltoa((long)bkColor + 10, bk, 10);
+    bk[2] = '\0';
+    char font[3];
+    ltoa((long)fontColor, font, 10);
+    font[2] = '\0';
+    Write("\033[%s;%sm%s\033[0m", bk, font, str);
 #endif
 }

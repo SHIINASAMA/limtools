@@ -113,21 +113,14 @@ public:
         PaleYellow = 0xE,
         LightWhite = 0xF
 #elif __linux__
+        Black = 30,
         Red = 31,
         Green = 32,
-        Orange = 33,
+        Yellow = 33,
         Blue = 34,
         Purple = 35,
-        Cyan = 36,
-        Grey = 37,
-        DarkGrey = 90,
-        LightRed = 91,
-        LightGreen = 92,
-        Yellow = 93,
-        LightBlue = 94,
-        LightPurple = 95,
-        Turquoise = 96,
-        White = 97
+        Azure = 36,
+        White = 37
 #endif
     };
 
