@@ -82,4 +82,69 @@ public:
      * @param c 目标字符
      */
     static void Put(char c);
+
+    /**
+     * @brief 输出换行
+     * 
+     */
+    static void NewLine();
+
+    /**
+     * @brief 颜色枚举
+     * 
+     */
+    enum class Colors
+    {
+#ifdef _WIN32
+        Black = 0x0,
+        Blue = 0x1,
+        Green = 0x2,
+        LightGreen = 0x3,
+        Red = 0x4,
+        Purple = 0x5,
+        Yellow = 0x6,
+        White = 0x7,
+        Grey = 0x8,
+        PaleBlue = 0x9,
+        PaleGreen = 0xA,
+        PaleLightGreen = 0xB,
+        PaleRed = 0xC,
+        PalePurple = 0xD,
+        PaleYellow = 0xE,
+        LightWhite = 0xF
+#elif __linux__
+        Red = 31,
+        Green = 32,
+        Orange = 33,
+        Blue = 34,
+        Purple = 35,
+        Cyan = 36,
+        Grey = 37,
+        DarkGrey = 90,
+        LightRed = 91,
+        LightGreen = 92,
+        Yellow = 93,
+        LightBlue = 94,
+        LightPurple = 95,
+        Turquoise = 96,
+        White = 97
+#endif
+    };
+
+#ifdef _WIN32
+private:
+    static void SetColor(Colors fontColor, Colors bkColor);
+
+    static void ClearColor();
+#endif
+
+public:
+    /**
+     * @brief 彩色输出
+     * 
+     * @param str 目标字符串
+     * @param fontColor 前景色
+     * @param bkColor 背景色
+     */
+    static void WriteColorful(const char *str, Colors fontColor, Colors bkColor = Colors::Black);
 };

@@ -202,3 +202,30 @@ void Console::Put(char c)
     char temp[2]{c, '\0'};
     Print(temp);
 }
+
+void Console::NewLine(){
+    Print("\n");
+}
+
+#ifdef _WIN32
+void Console::SetColor(Colors fontColor, Colors bkColor)
+{
+    SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD)bkColor * 0x10 | (WORD)fontColor);
+}
+
+void Console::ClearColor()
+{
+    SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD)Colors::Black * 0x10 | (WORD)Colors::White);
+}
+#endif
+
+void Console::WriteColorful(const char *str, Colors fontColor, Colors bkColor)
+{
+#ifdef _WIN32
+    SetColor(fontColor, bkColor);
+    Print(str);
+    ClearColor();
+#elif __linux__
+
+#endif
+}
