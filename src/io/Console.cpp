@@ -67,18 +67,127 @@ void Console::Print(const char *str)
 
 void Console::FormatWrite(char *buf, const char *fmt, va_list args)
 {
-    while (*fmt)
+    // while (*fmt)
+    // {
+    //     if (*fmt == '%')
+    //     {
+    //         fmt++;
+    //         switch (*fmt)
+    //         {
+    //         case '%':
+    //         {
+    //             *buf = '%';
+    //             buf++;
+    //             fmt++;
+    //             break;
+    //         }
+    //         case 'b':
+    //         {
+    //             char temp[33];
+    //             long l = va_arg(args, long);
+    //             ltoa(l, temp, 2);
+    //             int len = strlen(temp);
+    //             strcpy(buf, temp);
+    //             buf += len;
+    //             fmt++;
+    //             break;
+    //         }
+    //         case 'o':
+    //         {
+    //             char temp[33];
+    //             long l = va_arg(args, long);
+    //             ltoa(l, temp, 8);
+    //             int len = strlen(temp);
+    //             strcpy(buf, temp);
+    //             buf += len;
+    //             fmt++;
+    //             break;
+    //         }
+    //         case 'd':
+    //         {
+    //             char temp[33];
+    //             long l = va_arg(args, long);
+    //             ltoa(l, temp, 10);
+    //             int len = strlen(temp);
+    //             strcpy(buf, temp);
+    //             buf += len;
+    //             fmt++;
+    //             break;
+    //         }
+    //         case 'x':
+    //         {
+    //             char temp[33];
+    //             long l = va_arg(args, long);
+    //             ltoa(l, temp, 16);
+    //             int len = strlen(temp);
+    //             strcpy(buf, temp);
+    //             buf += len;
+    //             fmt++;
+    //             break;
+    //         }
+    //         case 'f':
+    //         {
+    //             char temp[33];
+    //             double d = va_arg(args, double);
+    //             sprintf(temp, "%lf", d);
+    //             int len = strlen(temp);
+    //             strcpy(buf, temp);
+    //             buf += len;
+    //             fmt++;
+    //             break;
+    //         }
+    //         case 's':
+    //         {
+    //             char *temp = va_arg(args, char *);
+    //             int len = strlen(temp);
+    //             strcpy(buf, temp);
+    //             buf += len;
+    //             fmt++;
+    //             break;
+    //         }
+    //         case 'c':
+    //         {
+    //             int temp = va_arg(args, int);
+    //             *buf = (char)temp;
+    //             buf++;
+    //             fmt++;
+    //             break;
+    //         }
+    //         }
+    //     }
+    //     else
+    //     {
+    //         *buf = *fmt;
+    //         buf++;
+    //         fmt++;
+    //     }
+    // }
+    // *buf = '\0';
+
+    const char *header = fmt;
+    char *nbuf = buf;
+    int len = 0;
+    while (*header)
     {
-        if (*fmt == '%')
+        if (*header != '%')
         {
-            fmt++;
+            len++;
+            header++;
+        }
+        else if (*header)
+        {
+            memcpy(nbuf, fmt, len);
+            nbuf += len;
+            fmt += len + 1;
+            len = 0;
             switch (*fmt)
             {
             case '%':
             {
-                *buf = '%';
-                buf++;
+                *nbuf = '%';
+                nbuf++;
                 fmt++;
+                header += 2;
                 break;
             }
             case 'b':
@@ -87,9 +196,10 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
                 long l = va_arg(args, long);
                 ltoa(l, temp, 2);
                 int len = strlen(temp);
-                strcpy(buf, temp);
-                buf += len;
+                strcpy(nbuf, temp);
+                nbuf += len;
                 fmt++;
+                header += 2;
                 break;
             }
             case 'o':
@@ -98,9 +208,10 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
                 long l = va_arg(args, long);
                 ltoa(l, temp, 8);
                 int len = strlen(temp);
-                strcpy(buf, temp);
-                buf += len;
+                strcpy(nbuf, temp);
+                nbuf += len;
                 fmt++;
+                header += 2;
                 break;
             }
             case 'd':
@@ -109,9 +220,10 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
                 long l = va_arg(args, long);
                 ltoa(l, temp, 10);
                 int len = strlen(temp);
-                strcpy(buf, temp);
-                buf += len;
+                strcpy(nbuf, temp);
+                nbuf += len;
                 fmt++;
+                header += 2;
                 break;
             }
             case 'x':
@@ -120,9 +232,10 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
                 long l = va_arg(args, long);
                 ltoa(l, temp, 16);
                 int len = strlen(temp);
-                strcpy(buf, temp);
-                buf += len;
+                strcpy(nbuf, temp);
+                nbuf += len;
                 fmt++;
+                header += 2;
                 break;
             }
             case 'f':
@@ -131,38 +244,45 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
                 double d = va_arg(args, double);
                 sprintf(temp, "%lf", d);
                 int len = strlen(temp);
-                strcpy(buf, temp);
-                buf += len;
+                strcpy(nbuf, temp);
+                nbuf += len;
                 fmt++;
+                header += 2;
                 break;
             }
             case 's':
             {
                 char *temp = va_arg(args, char *);
                 int len = strlen(temp);
-                strcpy(buf, temp);
-                buf += len;
+                strcpy(nbuf, temp);
+                nbuf += len;
                 fmt++;
+                header += 2;
                 break;
             }
             case 'c':
             {
                 int temp = va_arg(args, int);
-                *buf = (char)temp;
-                buf++;
+                *nbuf = (char)temp;
+                nbuf++;
                 fmt++;
+                header += 2;
                 break;
             }
             }
         }
-        else
-        {
-            *buf = *fmt;
-            buf++;
-            fmt++;
-        }
     }
-    *buf = '\0';
+    memcpy(nbuf, fmt, len);
+    nbuf += len;
+    *nbuf = '\0';
+}
+
+void Console::Format(char *buf, const char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    FormatWrite(buf, fmt, args);
+    va_end(args);
 }
 
 void Console::Write(const char *fmt, ...)
@@ -208,17 +328,29 @@ void Console::NewLine()
     Print("\n");
 }
 
-#ifdef _WIN32
 void Console::SetColor(Colors fontColor, Colors bkColor)
 {
+#ifdef _WIN32
     SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD)bkColor * 0x10 | (WORD)fontColor);
+#elif __linux__
+    char bk[3];
+    ltoa((long)bkColor + 10, bk, 10);
+    bk[2] = '\0';
+    char font[3];
+    ltoa((long)fontColor, font, 10);
+    font[2] = '\0';
+    Write("\033[%s;%sm%s", bk, font, str);
+#endif
 }
 
 void Console::ClearColor()
 {
+#ifdef _WIN32
     SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD)Colors::Black * 0x10 | (WORD)Colors::White);
-}
+#elif __linux__
+    Print("\033[0m");
 #endif
+}
 
 void Console::WriteColorful(const char *str, Colors fontColor, Colors bkColor)
 {

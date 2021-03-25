@@ -5,8 +5,8 @@
 int main()
 {
 #ifdef test_print
-    Console::Write("Hello ,%d\n", 10);
-    Console::Write("Hi,%s%c,%b\n", "Worl", 'd', 20);
+    Console::Write("你好 ,%d\nG", 10);
+    Console::Write("Hi,%%%s%c,%b\nB", "Worl", 'd', 20);
 
     long i;
     Console::Read("%d", &i);

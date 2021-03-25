@@ -28,6 +28,9 @@
  */
 class Console
 {
+private:
+    static void FormatWrite(char *buf, const char *fmt, va_list args);
+
 public:
     /**
      * @brief 静态输出，不存在变量时请使用这个
@@ -37,13 +40,13 @@ public:
     static void Print(const char *str);
 
     /**
-     * @brief 构造格式字符串
+     * @brief 格式化字符串
      * 
-     * @param buf 结果缓存
+     * @param buf 字符缓存
      * @param fmt 目标格式
-     * @param args 参数
+     * @param ... 参数
      */
-    static void FormatWrite(char *buf, const char *fmt, va_list args);
+    static void Format(char *buf, const char *fmt, ...);
 
     /**
      * @brief 格式化输出
@@ -124,14 +127,20 @@ public:
 #endif
     };
 
-#ifdef _WIN32
-private:
+    /**
+     * @brief 设置颜色
+     * 
+     * @param fontColor 前景色 
+     * @param bkColor 背景色
+     */
     static void SetColor(Colors fontColor, Colors bkColor);
 
+    /**
+     * @brief 清除颜色
+     * 
+     */
     static void ClearColor();
-#endif
 
-public:
     /**
      * @brief 彩色输出
      * 
