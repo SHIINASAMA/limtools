@@ -25,7 +25,7 @@ Thread::~Thread()
 
 void Thread::Start()
 {
-    this->worker = std::thread(Thread::Run, this);
+    this->worker = std::thread(std::bind(&Thread::Run, this));
 }
 
 std::thread::id Thread::GetId()

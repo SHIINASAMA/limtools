@@ -339,7 +339,7 @@ void Console::SetColor(Colors fontColor, Colors bkColor)
     char font[3];
     ltoa((long)fontColor, font, 10);
     font[2] = '\0';
-    Write("\033[%s;%sm%s", bk, font, str);
+    Write("\033[%s;%sm%s", bk, font, bk);
 #endif
 }
 

@@ -14,6 +14,6 @@ int main()
     MyThread th;
     th.Start();
     th.Join();
-    Console::Print("Main:子线程执行完毕");
+    Console::Print("Main:子线程执行完毕\n");
     return 0;
 }

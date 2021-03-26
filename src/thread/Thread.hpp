@@ -10,6 +10,7 @@
  */
 
 #include <thread>
+#include <functional>
 
 /**
  * @brief 线程类
