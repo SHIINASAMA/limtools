@@ -18,9 +18,8 @@
  */
 class Thread
 {
-private:
+protected:
     std::thread worker;
-
 
 public:
     /**
@@ -39,7 +38,7 @@ public:
      * @brief 启动线程，将会调用Thread::Run函数
      * 
      */
-    void Start();
+    virtual void Start();
 
     /**
      * @brief 获取线程ID

@@ -1,19 +1,35 @@
 #include "io/Console.hpp"
-#include "thread/Thread.hpp"
+#include "thread/ThreadGroup.hpp"
 
-class MyThread : public Thread
+volatile long i = 0;
+
+class MyThread : public SafeThread
 {
     void Run() override
     {
-        Console::Print("Child:我是子线程\n");
+        for (int n = 0; n < 100000; n++)
+        {
+            this->Lock();
+            i++;
+            this->Unlock();
+        }
     }
 };
 
 int main()
 {
-    MyThread th;
-    th.Start();
-    th.Join();
-    Console::Print("Main:子线程执行完毕\n");
+    ThreadGroup group;
+    MyThread th1, th2;
+    group.Add(&th1);
+    group.Add(&th2);
+
+    th1.Start();
+    th2.Start();
+
+    th1.Join();
+    th2.Join();
+
+    Console::Put(i);
+    Console::NewLine();
     return 0;
 }
