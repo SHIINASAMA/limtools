@@ -10,3 +10,4 @@ Makefile
 *.lib
 *.dll
 *.cmake
+*.exe
