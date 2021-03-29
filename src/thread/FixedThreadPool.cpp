@@ -2,21 +2,22 @@
 
 FixedThreadPool *FixedThreadPool::pool = nullptr;
 
-FixedThreadPool::FixedThreadPool(int threadNum)
+FixedThreadPool::FixedThreadPool(short threadNum)
 {
     this->threadNum = threadNum;
     threads = new std::thread[threadNum];
-    for (int i = 0; i < threadNum; i++)
+    for (short i = 0; i < threadNum; i++)
     {
-        threads[i] = std::thread(std::bind(&FixedThreadPool::Run, this, i));
+        threads[i] = std::thread(std::bind(&FixedThreadPool::RunTask, this, i));
     }
 }
 
-void FixedThreadPool::CreateFixedThreadPool(int threadNum)
+void FixedThreadPool::CreateFixedThreadPool(short threadNum, bool hasRes)
 {
     if (FixedThreadPool::pool == nullptr)
     {
         FixedThreadPool::pool = new FixedThreadPool(threadNum);
+        ::hasRes = hasRes;
     }
 }
 
@@ -25,17 +26,20 @@ FixedThreadPool *FixedThreadPool::GetFixedThreadPool()
     return FixedThreadPool::pool;
 }
 
-void FixedThreadPool::Start()
+FixedThreadPool::~FixedThreadPool()
+{
+}
+
+void FixedThreadPool::Run()
 {
     command = Commands::RUN;
 }
 
-void FixedThreadPool::Pause()
+void FixedThreadPool::Stop()
 {
     command = Commands::STOP;
 }
 
-//设置命令后等待线程悉数退出后回收资源
 void FixedThreadPool::Exit()
 {
     command = Commands::EXIT;
@@ -46,39 +50,38 @@ void FixedThreadPool::Exit()
     delete[] threads;
 }
 
-void FixedThreadPool::AddTask(Task *task)
-{
-    __mutex.lock();
-    __tasks.push(task);
-    __mutex.unlock();
-}
-
-void FixedThreadPool::Run(int id)
+void FixedThreadPool::RunTask(short threadId)
 {
 restart:
     switch (command)
     {
     case Commands::RUN:
     {
-        if (__tasks.size() != 0)
+        mutex1.lock();
+        if (taskList.size() != 0)
         {
-            Task *task;
-            __mutex.lock();
-            task = __tasks.front();
-            __tasks.pop();
-            __mutex.unlock();
-            printf("线程%d收到任务\n", id);
-            task->Run();
+            Task *task = taskList.front();
+            taskList.pop();
+            mutex1.unlock();
+
+            //printf("线程%d执行中...\n", threadId);
+            if (hasRes)
+            {
+                mutex2.lock();
+                completeList.push(task);
+                mutex2.unlock();
+            }
         }
         else
         {
-            _sleep(1000);
+            mutex1.unlock();
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         goto restart;
     }
     case Commands::STOP:
     {
-        _sleep(1000);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         goto restart;
     }
     case Commands::EXIT:
@@ -88,7 +91,35 @@ restart:
     }
 }
 
-FixedThreadPool::~FixedThreadPool()
+short FixedThreadPool::GetThreadTotal()
 {
-    Exit();
+    return this->threadNum;
+}
+
+short FixedThreadPool::GetAliveThreadNum()
+{
+    return aliveThreadNum;
+}
+
+Task *FixedThreadPool::Pop()
+{
+    mutex2.lock();
+    if (completeList.size() != 0)
+    {
+        Task *temp = completeList.front();
+        completeList.pop();
+    }
+    else
+    {
+        mutex2.unlock();
+        return nullptr;
+    }
+    return nullptr;
+}
+
+void FixedThreadPool::Push(Task *task)
+{
+    mutex1.lock();
+    taskList.push(task);
+    mutex1.unlock();
 }

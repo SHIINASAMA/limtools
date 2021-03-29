@@ -29,10 +29,22 @@ enum class Commands
 
 static volatile Commands command = Commands::STOP;
 
-static std::mutex __mutex;
+static std::mutex mutex1;
 
-static std::queue<Task *> __tasks;
+static std::mutex mutex2;
 
+static std::queue<Task *> taskList;
+
+static std::queue<Task *> completeList;
+
+static volatile short aliveThreadNum = 0;
+
+static bool hasRes = false;
+
+/**
+ * @brief 不可变线程池
+ * 
+ */
 class FixedThreadPool
 {
 protected:
@@ -40,24 +52,30 @@ protected:
 
     std::thread *threads;
 
-    FixedThreadPool(int threadNum);
+    FixedThreadPool(short threadNum);
 
     static FixedThreadPool *pool;
 
     ~FixedThreadPool();
 
-    void Run(int id);
+    void RunTask(short threadId);
 
 public:
-    static void CreateFixedThreadPool(int threadNum);
+    static void CreateFixedThreadPool(short threadNum, bool hasRes = true);
 
     static FixedThreadPool *GetFixedThreadPool();
 
-    void Start();
+    void Run();
 
-    void Pause();
+    void Stop();
 
     void Exit();
 
-    void AddTask(Task *task);
+    short GetThreadTotal();
+
+    short GetAliveThreadNum();
+
+    Task *Pop();
+
+    void Push(Task *task);
 };

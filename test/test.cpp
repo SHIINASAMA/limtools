@@ -17,17 +17,16 @@ public:
 
 int main()
 {
-    FixedThreadPool::CreateFixedThreadPool(20);
+    FixedThreadPool::CreateFixedThreadPool(1000, false);
     auto pool = FixedThreadPool::GetFixedThreadPool();
-    pool->Start();
-    MyTask *tasks = new MyTask[100];
-    for (int i = 0; i < 100; i++)
+    pool->Run();
+    MyTask *tasks = new MyTask[3000];
+    for (int i = 0; i < 3000; i++)
     {
-        pool->AddTask(&tasks[i]);
+        pool->Push(&tasks[i]);
     }
 
-    _sleep(15000);
-    auto b = tasks[99].done;
+    _sleep(5000);
     pool->Exit();
     Console::Write("线程池已关闭\n");
     return 0;
