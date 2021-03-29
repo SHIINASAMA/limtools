@@ -1,35 +1,33 @@
 #include "io/Console.hpp"
-#include "thread/ThreadGroup.hpp"
+#include "thread/FixedThreadPool.hpp"
 
 volatile long i = 0;
 
-class MyThread : public SafeThread
+class MyTask : public Task
 {
-    void Run() override
+public:
+    bool done = false;
+    virtual void Run() override
     {
-        for (int n = 0; n < 100000; n++)
-        {
-            this->Lock();
-            i++;
-            this->Unlock();
-        }
+        //Console::Write("任务被执行\n");
+        _sleep(1000);
+        done = true;
     }
 };
 
 int main()
 {
-    ThreadGroup group;
-    MyThread th1, th2;
-    group.Add(&th1);
-    group.Add(&th2);
+    FixedThreadPool::CreateFixedThreadPool(1000, false);
+    auto pool = FixedThreadPool::GetFixedThreadPool();
+    pool->Run();
+    MyTask *tasks = new MyTask[3000];
+    for (int i = 0; i < 3000; i++)
+    {
+        pool->Push(&tasks[i]);
+    }
 
-    th1.Start();
-    th2.Start();
-
-    th1.Join();
-    th2.Join();
-
-    Console::Put(i);
-    Console::NewLine();
+    _sleep(5000);
+    pool->Exit();
+    Console::Write("线程池已关闭\n");
     return 0;
 }
