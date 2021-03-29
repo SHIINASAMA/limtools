@@ -1,3 +1,13 @@
+/**
+ * @file FixedThreadPool.cpp
+ * @author kaoru (shiina_kaoru@outlook.com)
+ * @brief 不可变线程池定义
+ * @version 0.1
+ * @date 2021-03-29
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 #include "FixedThreadPool.hpp"
 
 FixedThreadPool *FixedThreadPool::pool = nullptr;
