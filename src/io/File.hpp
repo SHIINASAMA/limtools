@@ -2,6 +2,10 @@
 #include <Windows.h>
 #define ID HANDLE
 #elif __linux__
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 #define ID int
 #endif
 
@@ -16,9 +20,9 @@ enum class AccessMode
     WRITE,
     BOTH
 #elif __linux__
-    READ,
-    WRITE,
-    BOTH
+    READ = O_RDONLY,
+    WRITE = O_WRONLY,
+    BOTH = O_RDWR
 #endif
 };
 
@@ -35,7 +39,7 @@ enum class OpenMode
      */
     NEW = CREATE_NEW,
     /**
-     * @brief 文件存在则打开，不存在则创建
+     * @brief 文件存在则截断，不存在则创建
      * 
      */
     CREATE = OPEN_ALWAYS,
@@ -49,12 +53,12 @@ enum class OpenMode
      * @brief 文件存在则报错
      * 
      */
-    NEW,
+    NEW = O_CREAT | O_EXCL,
     /**
      * @brief 文件存在则截断，不存在则创建
      * 
      */
-    CREATE,
+    CREATE = O_CREAT | O_TRUNC,
     /**
      * @brief 打开文件，不存在则报错
      * 
@@ -81,13 +85,23 @@ enum class SeekPos
      */
     END = FILE_END,
 #elif __linux__
+    /**
+     * @brief 文件开头
+     * 
+     */
+    BEGIN = SEEK_SET,
+    /**
+     * @brief 文件尾部
+     * 
+     */
+    END = SEEK_END
 #endif
 };
 
 class File
 {
 protected:
-    ID id;
+    ID id = -1;
 
     virtual ~File();
 
@@ -103,6 +117,8 @@ public:
     void SetOffset(long pos);
 
     void SetOffset(SeekPos pos);
+
+    void MoveOffset(long pos);
 
     void Close();
 };

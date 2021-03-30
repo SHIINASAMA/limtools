@@ -6,7 +6,7 @@ int main()
     auto file = new File();
     if (false == file->Open((char *)"a.txt", AccessMode::BOTH, OpenMode::CREATE))
     {
-        Console::Write("Open file failed!");
+        Console::Write("Open file failed!\n");
     }
     else
     {
