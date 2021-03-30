@@ -116,7 +116,11 @@ enum class SeekPos
 class File
 {
 protected:
+#ifdef _WIN32
+    ID id = INVALID_HANDLE_VALUE;
+#elif __linux__
     ID id = -1;
+#endif
 
     virtual ~File();
 
