@@ -1,3 +1,14 @@
+/**
+ * @file File.hpp
+ * @author kaoru (shiina_kaoru@outlook.com)
+ * @brief 文件IO类声明
+ * @version 0.1
+ * @date 2021-03-30
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #ifdef _WIN32
 #include <Windows.h>
 #define ID HANDLE
@@ -98,6 +109,10 @@ enum class SeekPos
 #endif
 };
 
+/**
+ * @brief 文件类
+ * 
+ */
 class File
 {
 protected:
@@ -106,19 +121,65 @@ protected:
     virtual ~File();
 
 public:
+    /**
+     * @brief 初始化一个文件操作对象
+     * 
+     */
     File();
 
+    /**
+     * @brief 打开一个文件
+     * 
+     * @param path 文件路径
+     * @param accessMode 访问模式
+     * @param openMode 打开模式
+     * @return true 打开成功
+     * @return false 打开失败
+     */
     bool Open(char *path, AccessMode accessMode, OpenMode openMode);
 
+    /**
+     * @brief 向文件写入数据
+     * 
+     * @param buf 缓存
+     * @param len 写入大小
+     * @return int 实际写入缓存大小
+     */
     int Write(void *buf, int len);
 
+    /**
+     * @brief 从文件中读取数据
+     * 
+     * @param buf 缓存
+     * @param len 读取大小
+     * @return int 实际读取大小
+     */
     int Read(void *buf, int len);
 
+    /**
+     * @brief 设置偏移位置
+     * 
+     * @param pos 偏移大小
+     */
     void SetOffset(long pos);
 
+    /**
+     * @brief 设置基准位置
+     * 
+     * @param pos 基准位置
+     */
     void SetOffset(SeekPos pos);
 
+    /**
+     * @brief 以当前节点为基准移动位置
+     * 
+     * @param pos 偏移大小
+     */
     void MoveOffset(long pos);
 
+    /**
+     * @brief 关闭当前连接
+     * 
+     */
     void Close();
 };
