@@ -1,41 +1,23 @@
 #include "io/Console.hpp"
-#include "thread/FixedThreadPool.hpp"
-
-volatile long i = 0;
-
-class MyTask : public Task
-{
-public:
-    bool done = false;
-    virtual void Run() override
-    {
-        //Console::Write("任务被执行\n");
-#ifdef _WIN32
-        _sleep(1000);
-#elif __linux__
-        sleep(1);
-#endif
-        done = true;
-    }
-};
+#include "io/File.hpp"
 
 int main()
 {
-    FixedThreadPool::CreateFixedThreadPool(100, false);
-    auto pool = FixedThreadPool::GetFixedThreadPool();
-    pool->Run();
-    MyTask *tasks = new MyTask[1000];
-    for (int i = 0; i < 1000; i++)
+    auto file = new File();
+    if (false == file->Open((char *)"a.txt", AccessMode::BOTH, OpenMode::CREATE))
     {
-        pool->Push(&tasks[i]);
+        Console::Write("Open file failed!");
     }
-
-#ifdef _WIN32
-    _sleep(5000);
-#elif __linux__
-    sleep(5);
-#endif
-    pool->Exit();
-    Console::Write("线程池已关闭\n");
+    else
+    {
+        char *wbuf = (char *)"Hello中国あいうえお\0";
+        int wlen = file->Write(wbuf, strlen(wbuf));
+        char rbuf[128]{0};
+        file->Seek(0);
+        int rlen = file->Read(rbuf, 128);
+        auto err = GetLastError();
+        Console::Write("Written %d bytes\nRead:%s(%d bytes)\n", wlen, rbuf, rlen);
+        file->Close();
+    }
     return 0;
 }
