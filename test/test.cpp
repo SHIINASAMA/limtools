@@ -13,9 +13,8 @@ int main()
         char *wbuf = (char *)"Hello中国あいうえお\0";
         int wlen = file->Write(wbuf, strlen(wbuf));
         char rbuf[128]{0};
-        file->Seek(0);
+        file->SetOffset(0);
         int rlen = file->Read(rbuf, 128);
-        auto err = GetLastError();
         Console::Write("Written %d bytes\nRead:%s(%d bytes)\n", wlen, rbuf, rlen);
         file->Close();
     }

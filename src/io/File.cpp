@@ -6,7 +6,14 @@ File::File()
 
 File::~File()
 {
-    Close();
+#ifdef _WIN32
+    if (this->id != INVALID_HANDLE_VALUE)
+    {
+        Close();
+    }
+#elif __linux__
+/* Code */
+#endif
 }
 
 bool File::Open(char *path, AccessMode accessMode, OpenMode openMode)
@@ -72,10 +79,18 @@ int File::Read(void *buf, int len)
 #endif
 }
 
-void File::Seek(long pos)
+void File::SetOffset(long pos)
 {
 #ifdef _WIN32
-    SetFilePointer(this->id, 0, 0, pos);
+    SetFilePointer(this->id, pos, 0, 0);
+#elif __linux__
+#endif
+}
+
+void File::SetOffset(SeekPos pos)
+{
+#ifdef _WIN32
+    SetFilePointer(this->id, 0, 0, (DWORD)pos);
 #elif __linux__
 #endif
 }

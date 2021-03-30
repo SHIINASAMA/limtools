@@ -63,6 +63,27 @@ enum class OpenMode
 #endif
 };
 
+/**
+ * @brief Seek定位位置
+ * 
+ */
+enum class SeekPos
+{
+#ifdef _WIN32
+    /**
+     * @brief 文件开头
+     * 
+     */
+    BEGIN = FILE_BEGIN,
+    /**
+     * @brief 文件尾部
+     * 
+     */
+    END = FILE_END,
+#elif __linux__
+#endif
+};
+
 class File
 {
 protected:
@@ -79,7 +100,9 @@ public:
 
     int Read(void *buf, int len);
 
-    void Seek(long pos);
+    void SetOffset(long pos);
+
+    void SetOffset(SeekPos pos);
 
     void Close();
 };
