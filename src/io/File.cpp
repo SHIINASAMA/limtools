@@ -1,3 +1,14 @@
+/**
+ * @file File.cpp
+ * @author kaoru (shiina_kaoru@outlook.com)
+ * @brief 文件IO类定义
+ * @version 0.1
+ * @date 2021-03-30
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include "File.hpp"
 
 File::File()
@@ -22,6 +33,11 @@ File::~File()
 bool File::Open(char *path, AccessMode accessMode, OpenMode openMode)
 {
 #ifdef _WIN32
+    if (this->id != INVALID_HANDLE_VALUE)
+    {
+        return false;
+    }
+
     DWORD l;
     if (accessMode == AccessMode::READ)
     {
@@ -47,6 +63,11 @@ bool File::Open(char *path, AccessMode accessMode, OpenMode openMode)
         return false;
     }
 #elif __linux__
+    if (this->id != -1)
+    {
+        return false;
+    }
+
     if (openMode == OpenMode::NEW)
     {
         int temp = open(path, (int)accessMode | (int)openMode, S_IRWXU);
@@ -167,7 +188,7 @@ void File::SetOffset(SeekPos pos)
 void File::MoveOffset(long pos)
 {
 #ifdef _WIN32
-
+    SetFilePointer(this->id, pos, 0, FILE_CURRENT);
 #elif __linux__
     lseek(this->id, pos, SEEK_CUR);
 #endif
@@ -177,7 +198,7 @@ void File::Close()
 {
 #ifdef _WIN32
     CloseHandle(this->id);
-    this->id = -1;
+    this->id = INVALID_HANDLE_VALUE;
 #elif __linux__
     close(this->id);
     this->id = -1;
