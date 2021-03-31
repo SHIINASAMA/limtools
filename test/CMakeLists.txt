@@ -3,9 +3,7 @@ project(testApp)
 add_executable(testApp test.cpp)
 
 include_directories("../src")
-target_link_libraries(testApp io)
-target_link_libraries(testApp net)
-target_link_libraries(testApp thread)
+target_link_libraries(testApp limtools)
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 	MESSAGE(STATUS "平台: Linux ")
