@@ -328,6 +328,18 @@ void Console::NewLine()
     Print("\n");
 }
 
+void Console::SetColor(Colors fontColor)
+{
+#ifdef _WIN32
+    SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD)fontColor);
+#elif __linux__
+    char font[3];
+    ltoa((long)fontColor, font, 10);
+    font[2] = '\0';
+    Write("\033[%sm", font);
+#endif
+}
+
 void Console::SetColor(Colors fontColor, Colors bkColor)
 {
 #ifdef _WIN32
@@ -346,9 +358,23 @@ void Console::SetColor(Colors fontColor, Colors bkColor)
 void Console::ClearColor()
 {
 #ifdef _WIN32
-    SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD)Colors::Black * 0x10 | (WORD)Colors::White);
+    SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD)Colors::White);
 #elif __linux__
     Print("\033[0m");
+#endif
+}
+
+void Console::WriteColorful(const char *str, Colors fontColor)
+{
+#ifdef _WIN32
+    SetColor(fontColor);
+    Print(str);
+    ClearColor();
+#elif __linux__
+    char font[3];
+    ltoa((long)fontColor, font, 10);
+    font[2] = '\0';
+    Write("\033[%sm%s\033[0m", font, str);
 #endif
 }
 

@@ -130,6 +130,13 @@ public:
     /**
      * @brief 设置颜色
      * 
+     * @param fontColor 前景色
+     */
+    static void SetColor(Colors fontColor);
+
+    /**
+     * @brief 设置颜色
+     * 
      * @param fontColor 前景色 
      * @param bkColor 背景色
      */
@@ -141,6 +148,8 @@ public:
      */
     static void ClearColor();
 
+    static void WriteColorful(const char *str,Colors fontColor);
+
     /**
      * @brief 彩色输出
      * 
@@ -148,5 +157,5 @@ public:
      * @param fontColor 前景色
      * @param bkColor 背景色
      */
-    static void WriteColorful(const char *str, Colors fontColor, Colors bkColor = Colors::Black);
+    static void WriteColorful(const char *str, Colors fontColor, Colors bkColor);
 };
