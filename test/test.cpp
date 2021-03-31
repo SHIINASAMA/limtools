@@ -1,22 +1,12 @@
-#include "io/Console.hpp"
-#include "io/File.hpp"
+#include "file/config/ConfigProperty.hpp"
 
 int main()
 {
-    auto file = new File();
-    if (false == file->Open((char *)"a.txt", AccessMode::BOTH, OpenMode::CREATE))
-    {
-        Console::Write("Open file failed!\n");
-    }
-    else
-    {
-        char *wbuf = (char *)"Hello中国あいうえお\0";
-        int wlen = file->Write(wbuf, strlen(wbuf));
-        char rbuf[128]{0};
-        file->SetOffset(0);
-        int rlen = file->Read(rbuf, 128);
-        Console::Write("Written %d bytes\nRead:%s(%d bytes)\n", wlen, rbuf, rlen);
-        file->Close();
-    }
+    ConfigProperty config;
+    strcpy(config.Name,"Name");
+    strcpy(config.Value,"Value");
+    char str[128];
+    config.ToString(str);
+    config.Format("VALUE=NAME");
     return 0;
 }
