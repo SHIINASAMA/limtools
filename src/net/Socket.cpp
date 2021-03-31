@@ -101,7 +101,7 @@ Socket::Socket()
 {
 }
 
-Socket::Socket(SocketMode mode, char *ipaddr, ushort port)
+Socket::Socket(SocketMode mode, char *ipaddr, unsigned short port)
 {
     this->sock = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     this->sin.sin_family = AF_INET;
