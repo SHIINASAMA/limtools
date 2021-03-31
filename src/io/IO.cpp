@@ -11,20 +11,27 @@
 #ifdef _WIN32
 #include "IO.hpp"
 
-HANDLE IO::inputHandle;
-HANDLE IO::outputHandle;
+IO *IO::io = new IO();
 
-HANDLE IO::GetInputHandle(){
-    if(inputHandle == NULL){
-        inputHandle = GetStdHandle(STD_INPUT_HANDLE);
-    }
-    return inputHandle;
+IO::IO()
+{
+    this->inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+    this->outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
-HANDLE IO::GetOutputHandle(){
-    if(outputHandle == NULL){
-        outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    }
-    return outputHandle;
+IO::~IO()
+{
+    CloseHandle(this->inputHandle);
+    CloseHandle(this->outputHandle);
+}
+
+HANDLE IO::GetInputHandle()
+{
+    return io->inputHandle;
+}
+
+HANDLE IO::GetOutputHandle()
+{
+    return io->outputHandle;
 }
 #endif

@@ -8,19 +8,25 @@
  * @copyright Copyright (c) 2021
  * 
  */
-
+#ifdef _WIN32
 #include <Windows.h>
 
 /**
  * @brief IO句柄管理类
  * 
  */
-class IO{
+class IO
+{
 
 private:
-    static HANDLE inputHandle;
-    static HANDLE outputHandle;
+    HANDLE inputHandle;
+    HANDLE outputHandle;
 
+    static IO *io;
+
+    IO();
+
+    ~IO();
 public:
     /**
      * @brief 获取输入句柄
@@ -35,10 +41,5 @@ public:
      * @return HANDLE 输出句柄
      */
     static HANDLE GetOutputHandle();
-
-    /**
-     * @brief 销毁IO句柄
-     * 
-     */
-    static void DisposeHandle();
 };
+#endif
