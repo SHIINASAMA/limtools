@@ -1,3 +1,14 @@
+/**
+ * @file ConfigReader.cpp
+ * @author kaoru (shiina_kaoru@outlook.com)
+ * @brief Config文件读取类定义
+ * @version 0.1
+ * @date 2021-04-01
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include "ConfigReader.hpp"
 
 bool ConfigReader::Read(char *path, std::map<char *, char *, cmp> *propertyMap)

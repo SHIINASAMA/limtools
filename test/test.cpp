@@ -1,12 +1,6 @@
 #include "file/config/ConfigWriter.hpp"
 #include "file/config/ConfigReader.hpp"
 
-void Make(ConfigProperty *property, char *Name, char *Value)
-{
-    strcpy(property->Name, Name);
-    strcpy(property->Value, Value);
-}
-
 int main()
 {
     std::map<char *, char *, cmp> map;

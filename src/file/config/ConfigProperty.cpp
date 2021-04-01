@@ -1,3 +1,14 @@
+/**
+ * @file ConfigProperty.cpp
+ * @author kaoru (shiina_kaoru@outlook.com)
+ * @brief Config属性类定义
+ * @version 0.1
+ * @date 2021-04-01
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include "ConfigProperty.hpp"
 
 ConfigProperty::ConfigProperty() {}

@@ -1,3 +1,14 @@
+/**
+ * @file ConfigProperty.hpp
+ * @author kaoru (shiina_kaoru@outlook.com)
+ * @brief Config属性类声明
+ * @version 0.1
+ * @date 2021-04-01
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include "../../io/Console.hpp"
 
 #define NAME_LEN 32
