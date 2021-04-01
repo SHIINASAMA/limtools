@@ -1,4 +1,4 @@
-#include <vector>
+#include <map>
 #include "../../io/File.hpp"
 #include "ConfigProperty.hpp"
 
@@ -8,7 +8,7 @@
 class ConfigWriter
 {
 public:
-    static bool Write(char *path, std::vector<ConfigProperty> *propertyList);
+    static bool Write(char *path, std::map<char *, char *, cmp> *propertyMap);
 };
 
 #endif
