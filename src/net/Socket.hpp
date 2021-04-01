@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _SOCKET_HPP_
+#define _SOCKET_HPP_
+
 /**
  * @brief 连接模式
  * 
@@ -218,4 +221,6 @@ public:
      */
     int Close();
 };
+#endif
+
 #endif

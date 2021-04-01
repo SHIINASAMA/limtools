@@ -8,6 +8,10 @@
  * @copyright Copyright (c) 2021
  * 
  */
+
+#ifndef _IO_HPP_
+#define _IO_HPP_
+
 #ifdef _WIN32
 #include <Windows.h>
 
@@ -42,4 +46,6 @@ public:
      */
     static HANDLE GetOutputHandle();
 };
+#endif
+
 #endif

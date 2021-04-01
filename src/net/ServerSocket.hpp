@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _SERVERSOCKET_HPP_
+#define _SERVERSOCKET_HPP_
+
 #include "Socket.hpp"
 
 /**
@@ -26,3 +29,5 @@ public:
      */
     ServerSocket(unsigned short port, int backlog);
 };
+
+#endif

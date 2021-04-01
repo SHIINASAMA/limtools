@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _SERVERDATAGRAMSOCKET_HPP_
+#define _SERVERDATAGRAMSOCKET_HPP_
+
 #include "DatagramSocket.hpp"
 
 /**
@@ -25,3 +28,5 @@ public:
      */
     ServerDatagramSocket(unsigned short port);
 };
+
+#endif

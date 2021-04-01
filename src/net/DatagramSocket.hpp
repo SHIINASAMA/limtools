@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _DATAGRAMSOCKET_HPP_
+#define _DATAGRAMSOCKET_HPP_
+
 #include "Socket.hpp"
 
 /**
@@ -52,3 +55,5 @@ public:
      */
     int Close();
 };
+
+#endif

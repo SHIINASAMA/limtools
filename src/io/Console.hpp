@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _CONSOLE_HPP_
+#define _CONSOLE_HPP_
+
 #ifdef _WIN32
 #include "IO.hpp"
 #include <stdlib.h>
@@ -159,3 +162,5 @@ public:
      */
     static void WriteColorful(const char *str, Colors fontColor, Colors bkColor);
 };
+
+#endif

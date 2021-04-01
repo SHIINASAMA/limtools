@@ -7,6 +7,6 @@ int main()
     strcpy(config.Value,"Value");
     char str[128];
     config.ToString(str);
-    config.Format("VALUE=NAME");
+    config.Format((char*)"VALUE=NAME");
     return 0;
 }

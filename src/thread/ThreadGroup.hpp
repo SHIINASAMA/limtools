@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _THREADGROUP_HPP_
+#define _THREADGROUP_HPP_
+
 #include "SafeThread.hpp"
 
 /**
@@ -32,5 +35,7 @@ public:
      * 
      * @param thread 目标线程
      */
-    void Add(SafeThread* thread);
+    void Add(SafeThread *thread);
 };
+
+#endif

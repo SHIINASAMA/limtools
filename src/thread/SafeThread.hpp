@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _SAFETHREAD_HPP_
+#define _SAFETHREAD_HPP_
+
 #include "Thread.hpp"
 #include <mutex>
 
@@ -53,3 +56,5 @@ public:
      */
     void Start() override;
 };
+
+#endif

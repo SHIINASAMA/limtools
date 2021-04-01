@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _FIXEDTHREADPOOL_HPP_
+#define _FIXEDTHREADPOOL_HPP_
+
 #include <queue>
 #include <thread>
 #include <functional>
@@ -133,3 +136,5 @@ public:
      */
     void Push(Task *task);
 };
+
+#endif

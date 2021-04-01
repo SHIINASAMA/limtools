@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _FILE_HPP_
+#define _FILE_HP_
+
 #ifdef _WIN32
 #include <Windows.h>
 #define ID HANDLE
@@ -187,3 +190,5 @@ public:
      */
     void Close();
 };
+
+#endif

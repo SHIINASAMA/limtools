@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _TASK_HPP_
+#define _TASK_HPP_
+
 /**
  * @brief 任务类
  * 
@@ -32,3 +35,5 @@ public:
      */
     void SetArgs(void *args);
 };
+
+#endif

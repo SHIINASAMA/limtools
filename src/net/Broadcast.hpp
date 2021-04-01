@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _BROADCAST_HPP_
+#define _BROADCAST_HPP_
+
 #include "Socket.hpp"
 
 /**
@@ -51,3 +54,5 @@ public:
      */
     int Close();
 };
+
+#endif

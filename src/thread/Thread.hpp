@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _THREAD_HPP_
+#define _THREAD_HPP_
+
 #include <thread>
 #include <functional>
 
@@ -66,3 +69,5 @@ public:
      */
     virtual void Run() = 0;
 };
+
+#endif
