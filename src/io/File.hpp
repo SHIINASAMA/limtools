@@ -10,7 +10,7 @@
  */
 
 #ifndef _FILE_HPP_
-#define _FILE_HP_
+#define _FILE_HPP_
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -56,7 +56,7 @@ enum class OpenMode
      * @brief 文件存在则截断，不存在则创建
      * 
      */
-    CREATE = OPEN_ALWAYS,
+    CREATE = CREATE_ALWAYS,
     /**
      * @brief 打开文件，不存在则报错
      * 
@@ -125,7 +125,6 @@ protected:
     ID id = -1;
 #endif
 
-    virtual ~File();
 
 public:
     /**
@@ -134,6 +133,12 @@ public:
      */
     File();
 
+    /**
+     * @brief 销毁对象
+     * 
+     */
+    virtual ~File();
+    
     /**
      * @brief 打开一个文件
      * 
