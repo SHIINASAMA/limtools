@@ -11,11 +11,11 @@ int main()
     auto res = ConfigWriter::Write((char *)"config", &map);
     if (res)
     {
-        Console::Print("Wrtier: OK\n");
+        Console::WriteColorful("Wrtier: OK\n", Console::Colors::Green);
     }
     else
     {
-        Console::Print("Writer: Error\n");
+        Console::WriteColorful("Writer: Error\n", Console::Colors::Red);
     }
 
     char *name;

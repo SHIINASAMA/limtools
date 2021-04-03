@@ -10,6 +10,7 @@
  */
 
 #include "../../io/Console.hpp"
+#include "../FileTools.hpp"
 
 #define NAME_LEN 32
 #define VALUE_LEN 96
@@ -41,12 +42,4 @@ public:
      * @param buf 目标缓存
      */
     void Format(char *buf);
-};
-
-struct cmp
-{
-    bool operator()(const char *pc1, const char *pc2) const
-    {
-        return strcmp(pc1, pc2) < 0;
-    }
 };
