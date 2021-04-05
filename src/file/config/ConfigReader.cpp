@@ -26,6 +26,8 @@ bool ConfigReader::Read(char *path, std::map<char *, char *, cmp> *propertyMap)
 
     while (len = file.Read(buf, 130))
     {
+        equalPos = 0;
+        enterPos = 0;
         for (int pos = 0; pos < len; pos++)
         {
             if (buf[pos] == '=')
@@ -45,8 +47,15 @@ bool ConfigReader::Read(char *path, std::map<char *, char *, cmp> *propertyMap)
         char *value = new char[VALUE_LEN];
         memcpy(name, buf, equalPos);
         name[equalPos] = '\0';
-        memcpy(value, &buf[equalPos + 1], enterPos - equalPos);
-        value[enterPos - equalPos - 1] = '\0';
+        memcpy(value, &buf[equalPos + 1], len - equalPos);
+        if (enterPos == 0)
+        {
+            value[len - equalPos - 1] = '\0';
+        }
+        else
+        {
+            value[enterPos - equalPos - 1] = '\0';
+        }
 
         propertyMap->insert(std::pair<char *, char *>(name, value));
         file.MoveOffset(enterPos - len + 1);
