@@ -120,7 +120,7 @@ public:
      * @param size 数据块大小
      * @return int 实际写入数据块大小
      */
-    int Write(char *buffer, int size);
+    int Write(const char *buffer, int size);
 
     /**
      * @brief 读取数据
@@ -209,7 +209,7 @@ public:
      * @param size 数据块大小
      * @return int 实际写入数据块大小
      */
-    int Write(char *buffer, int size);
+    int Write(const char *buffer, int size);
 
     /**
      * @brief 读取数据

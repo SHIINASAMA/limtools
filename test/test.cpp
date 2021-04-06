@@ -1,22 +1,17 @@
-#include "net/Socket.hpp"
+#include "net/http/Request.hpp"
 #include "io/Console.hpp"
 
 int main()
 {
-    char *buf[1];
-    int count = Socket::GetHostByName(buf, 1, "www.baidu.com");
-    if (count <= 0)
+    Request *require = new Request("/", "220.181.38.148\0", 80);
+    require->SetArg("Host", "www.baidu.com");
+    auto request = require->Get();
+    for (auto itor = request->recvMap.begin(); itor != request->recvMap.end(); itor++)
     {
-        Console::WriteColorful("error\n", Console::Colors::Red);
+        Console::Write("%s: %s\n", itor->first, itor->second);
     }
-    else
-    {
-        Console::Write("获取到%d个IP\n", count);
-        for (int i = 0; i < count; i++)
-        {
-            Console::Write("IP Address %d:%s\n", i, buf[i]);
-        }
-    }
+
+    Console::Print(request->content);
 
     return 0;
 }

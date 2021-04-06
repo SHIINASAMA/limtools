@@ -66,7 +66,7 @@ int Socket::Read(char *buffer, int size)
     return recv(this->sock, buffer, size, NULL);
 }
 
-int Socket::Write(char *buffer, int size)
+int Socket::Write(const char *buffer, int size)
 {
     return send(this->sock, buffer, size, NULL);
 }
@@ -169,7 +169,7 @@ int Socket::Read(char *buffer, int size)
     return read(this->sock, buffer, size);
 }
 
-int Socket::Write(char *buffer, int size)
+int Socket::Write(const char *buffer, int size)
 {
     return write(this->sock, buffer, size);
 }
