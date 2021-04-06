@@ -1,9 +1,20 @@
+/**
+ * @file Request.cpp
+ * @author kaoru (shiina_kaoru@outlook.com)
+ * @brief 请求类定义
+ * @version 0.1
+ * @date 2021-04-07
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include "Request.hpp"
 
 Request::Request(const char *url, const char *ipaddr, unsigned short port)
 {
-    strcpy(this->url, url);
-    strcpy(this->ipaddr, ipaddr);
+    strcpy_s(this->url, url);
+    strcpy_s(this->ipaddr, ipaddr);
     this->port = port;
 }
 

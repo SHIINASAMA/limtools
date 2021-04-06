@@ -23,8 +23,8 @@ bool ConfigWriter::Write(char *path, std::map<char *, char *, cmp> *propertyMap)
     char buf[130];
     for (auto i = propertyMap->begin(); i != propertyMap->end(); i++)
     {
-        strcpy(property.Name, i->first);
-        strcpy(property.Value, i->second);
+        strcpy_s(property.Name, i->first);
+        strcpy_s(property.Value, i->second);
         property.ToString(buf);
         file.Write(buf, strlen(buf));
     }

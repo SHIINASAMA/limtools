@@ -1,3 +1,14 @@
+/**
+ * @file Response.cpp
+ * @author kaoru (shiina_kaoru@outlook.com)
+ * @brief 响应类定义
+ * @version 0.1
+ * @date 2021-04-07
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include "Response.hpp"
 
 Response::Response() {}

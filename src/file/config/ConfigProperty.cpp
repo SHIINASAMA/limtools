@@ -28,5 +28,5 @@ void ConfigProperty::Format(char *buf)
         len2++;
     }
     memcpy(this->Name, buf, len2);
-    strcpy(this->Value, p);
+    strcpy_s(this->Value, p);
 }
