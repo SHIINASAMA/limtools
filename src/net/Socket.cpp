@@ -94,6 +94,38 @@ int Socket::Close()
     Socket::count--;
     return closesocket(this->sock);
 }
+
+int Socket::GetHostByName(char *buf[], int size, const char *domain)
+{
+    Socket sock;
+    auto hosts = gethostbyname(domain);
+    if (hosts == nullptr)
+    {
+        return -1;
+    }
+
+    if (hosts->h_addrtype == AF_INET6)
+    {
+        return -2;
+    }
+
+    int count = 0;
+    for (char *pt = hosts->h_addr_list[0]; pt != NULL; pt = hosts->h_addr_list[++count])
+    {
+        if (count < size)
+        {
+            in_addr in;
+            in.S_un.S_addr = *(u_long *)pt;
+            buf[count] = inet_ntoa(in);
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    return count;
+}
 #endif
 
 #ifdef __linux__

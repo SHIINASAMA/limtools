@@ -142,6 +142,16 @@ public:
      * @return int 成功返回0，失败返回非零
      */
     int Close();
+
+    /**
+     * @brief 域名解析
+     * 
+     * @param buf 缓存
+     * @param size 读取IP数量上限
+     * @param domain 目标域名
+     * @return 返回的IP数量
+     */
+    static int GetHostByName(char *buf[], int size, const char *domain);
 };
 #endif
 
