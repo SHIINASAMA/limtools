@@ -23,7 +23,11 @@ struct ucmp
 {
     bool operator()(const char *pc1, const char *pc2) const
     {
+#ifdef _WIN32
         return _stricmp(pc1, pc2) < 0;
+#elif __linux__
+        return strcasecmp(pc1, pc2) < 0;
+#endif
     }
 };
 

@@ -13,8 +13,14 @@
 
 Request::Request(const char *url, const char *ipaddr, unsigned short port)
 {
+#ifdef _WIN32
     strcpy_s(this->url, url);
     strcpy_s(this->ipaddr, ipaddr);
+#elif __linux__
+    strcpy(this->url, url);
+    strcpy(this->ipaddr, ipaddr);
+#endif
+
     this->port = port;
 }
 

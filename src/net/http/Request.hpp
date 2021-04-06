@@ -15,6 +15,7 @@
 #include "../Socket.hpp"
 #include <cstdio>
 #include <string>
+#include <string.h>
 
 /**
  * @brief 请求类
