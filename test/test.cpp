@@ -1,10 +1,10 @@
-#include "io/Console.hpp"
 #include "net/Socket.hpp"
+#include "io/Console.hpp"
 
 int main()
 {
-    char *buf[8];
-    int count = Socket::GetHostByName(buf, 8, "www.baidu.com");
+    char *buf[1];
+    int count = Socket::GetHostByName(buf, 1, "www.baidu.com");
     if (count <= 0)
     {
         Console::WriteColorful("error\n", Console::Colors::Red);

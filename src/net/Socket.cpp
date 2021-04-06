@@ -29,7 +29,7 @@ Socket::Socket()
     Socket::count++;
 }
 
-Socket::Socket(SocketMode mode, char *ipaddr, unsigned short port)
+Socket::Socket(SocketMode mode, const char *ipaddr, unsigned short port)
 {
     if (Socket::count == 0 && Socket::startup() != 0)
     {
@@ -133,7 +133,7 @@ Socket::Socket()
 {
 }
 
-Socket::Socket(SocketMode mode, char *ipaddr, unsigned short port)
+Socket::Socket(SocketMode mode,const char *ipaddr, unsigned short port)
 {
     this->sock = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     this->sin.sin_family = AF_INET;

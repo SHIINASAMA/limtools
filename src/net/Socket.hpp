@@ -54,7 +54,10 @@ enum class ShutdownMode
 };
 
 #ifdef _WIN32
+#define _WIN32_WINNT 0x0600
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <WinSock2.h>
+#include <WS2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 
 /**
@@ -80,7 +83,7 @@ public:
      * @param ipaddr 目标IP
      * @param port 目标端口
      */
-    Socket(SocketMode mode, char *ipaddr, unsigned short port);
+    Socket(SocketMode mode, const char *ipaddr, unsigned short port);
 
     /**
      * @brief 销毁套接字
@@ -176,7 +179,7 @@ public:
      * @param ipaddr 目标IP
      * @param port 目标端口
      */
-    Socket(SocketMode mode, char *ipaddr, unsigned short port);
+    Socket(SocketMode mode,const char *ipaddr, unsigned short port);
 
     /**
      * @brief 等待连接后返回客户端套接字
@@ -241,7 +244,7 @@ public:
      *
      * @return 返回的IP数量
      */
-    static int GetHostByName(char *buf[], int size, const char* domain);
+    static int GetHostByName(char *buf[], int size, const char *domain);
 };
 #endif
 

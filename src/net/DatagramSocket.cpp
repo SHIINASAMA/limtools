@@ -11,7 +11,7 @@
 
 #include "DatagramSocket.hpp"
 
-DatagramSocket::DatagramSocket(SocketMode mode, char *ipaddr, unsigned short port)
+DatagramSocket::DatagramSocket(SocketMode mode,const char *ipaddr, unsigned short port)
     : Socket()
 {
     this->sock = ::socket(AF_INET, SOCK_DGRAM, 0);
