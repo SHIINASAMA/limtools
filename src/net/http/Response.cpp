@@ -15,16 +15,9 @@ Response::Response() {}
 
 Response::~Response()
 {
-    for (auto itor = this->recvMap.begin(); itor != this->recvMap.end(); itor++)
-    {
-        delete itor->first;
-        delete itor->second;
-    }
-
-    delete this->content;
 }
 
-void Response::Format(const char *buf, int len)
+int Response::Format(const char *buf, int len)
 {
     char statusCode[4];
     int statusLine = 0;
@@ -65,7 +58,13 @@ void Response::Format(const char *buf, int len)
             char *value = new char[pos2 - pos1 - 4];
             memcpy(value, &buf[pos1 + 3], pos2 - pos1 - 5);
             value[pos2 - pos1 - 5] = '\0';
-            this->recvMap[name] = value;
+            this->recvMap.insert(std::make_pair(name, value));
+
+            if (buf[pos2] == '\r' && buf[pos2 + 1] == '\n')
+            {
+                pos2 = i + 2;
+                return pos2;
+            }
         }
     }
 }

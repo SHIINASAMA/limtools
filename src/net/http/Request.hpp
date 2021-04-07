@@ -54,6 +54,18 @@ public:
     Response *Get();
 
     /**
+     * @brief Post请求
+     * 
+     * @details Post需要手动使用SetArgs设置Content-Length
+     * 
+     * @param buf Post内容
+     * @param size Post内容长度
+     * 
+     * @return Response* 响应对象，会随着Request的销毁而销毁
+     */
+    Response *Post(const char *content, int size);
+
+    /**
      * @brief 设置参数
      * 
      * @param key 键

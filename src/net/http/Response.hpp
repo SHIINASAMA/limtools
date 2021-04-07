@@ -66,19 +66,21 @@ public:
      * @brief 响应内容
      * 
      */
-    char *content;
+    char *content = nullptr;
 
     /**
      * @brief 响应内容长度
      * 
      */
-    long len = 0;
+    int len = 0;
 
     /**
      * @brief 从buf中格式化数据
      * 
      * @param buf 缓存
      * @param len 缓存长度
+     * 
+     * @return 返回报头长度
      */
-    void Format(const char *buf, int len);
+    int Format(const char *buf, int len);
 };

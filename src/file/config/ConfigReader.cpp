@@ -64,8 +64,8 @@ void ConfigReader::FreeMap(std::map<char *, char *, cmp> *toFreeMap)
 {
     for (auto i = toFreeMap->begin(); i != toFreeMap->end(); i++)
     {
-        delete i->first;
-        delete i->second;
+        delete [] i->first;
+        delete [] i->second;
     }
     toFreeMap->clear();
 }
