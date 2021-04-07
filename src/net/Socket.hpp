@@ -54,7 +54,10 @@ enum class ShutdownMode
 };
 
 #ifdef _WIN32
+// #define _WIN32_WINNT 0x0600
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <WinSock2.h>
+#include <WS2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 
 /**
@@ -80,7 +83,7 @@ public:
      * @param ipaddr 目标IP
      * @param port 目标端口
      */
-    Socket(SocketMode mode, char *ipaddr, unsigned short port);
+    Socket(SocketMode mode, const char *ipaddr, unsigned short port);
 
     /**
      * @brief 销毁套接字
@@ -117,7 +120,7 @@ public:
      * @param size 数据块大小
      * @return int 实际写入数据块大小
      */
-    int Write(char *buffer, int size);
+    int Write(const char *buffer, int size);
 
     /**
      * @brief 读取数据
@@ -142,6 +145,16 @@ public:
      * @return int 成功返回0，失败返回非零
      */
     int Close();
+
+    /**
+     * @brief 域名解析
+     * 
+     * @param buf 缓存
+     * @param size 读取IP数量上限
+     * @param domain 目标域名
+     * @return 返回的IP数量
+     */
+    static int GetHostByName(char *buf[], int size, const char *domain);
 };
 #endif
 
@@ -149,6 +162,7 @@ public:
 #include <sys/socket.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 class Socket
 {
 protected:
@@ -165,7 +179,7 @@ public:
      * @param ipaddr 目标IP
      * @param port 目标端口
      */
-    Socket(SocketMode mode, char *ipaddr, unsigned short port);
+    Socket(SocketMode mode,const char *ipaddr, unsigned short port);
 
     /**
      * @brief 等待连接后返回客户端套接字
@@ -195,7 +209,7 @@ public:
      * @param size 数据块大小
      * @return int 实际写入数据块大小
      */
-    int Write(char *buffer, int size);
+    int Write(const char *buffer, int size);
 
     /**
      * @brief 读取数据
@@ -220,6 +234,17 @@ public:
      * @return int 成功返回0，失败返回非零
      */
     int Close();
+
+    /**
+     * @brief 域名解析
+     * 
+     * @param buf 缓存
+     * @param size 缓存大小
+     * @param domain 目标域名
+     *
+     * @return 返回的IP数量
+     */
+    static int GetHostByName(char *buf[], int size, const char *domain);
 };
 #endif
 

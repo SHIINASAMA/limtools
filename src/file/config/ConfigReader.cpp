@@ -24,10 +24,13 @@ bool ConfigReader::Read(char *path, std::map<char *, char *, cmp> *propertyMap)
     int enterPos = 0;
     int len = 0;
 
-    while (len = file.Read(buf, 130))
+    while (1)
     {
-        equalPos = 0;
-        enterPos = 0;
+        len = file.Read(buf, 130);
+        if (!len)
+        {
+            break;
+        }
         for (int pos = 0; pos < len; pos++)
         {
             if (buf[pos] == '=')
@@ -57,7 +60,7 @@ bool ConfigReader::Read(char *path, std::map<char *, char *, cmp> *propertyMap)
             value[enterPos - equalPos - 1] = '\0';
         }
 
-        propertyMap->insert(std::pair<char *, char *>(name, value));
+        propertyMap->insert(std::make_pair(name, value));
         file.MoveOffset(enterPos - len + 1);
     }
 
@@ -68,8 +71,8 @@ void ConfigReader::FreeMap(std::map<char *, char *, cmp> *toFreeMap)
 {
     for (auto i = toFreeMap->begin(); i != toFreeMap->end(); i++)
     {
-        delete i->first;
-        delete i->second;
+        delete [] i->first;
+        delete [] i->second;
     }
     toFreeMap->clear();
 }

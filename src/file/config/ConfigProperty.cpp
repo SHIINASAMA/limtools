@@ -28,5 +28,9 @@ void ConfigProperty::Format(char *buf)
         len2++;
     }
     memcpy(this->Name, buf, len2);
+#ifdef _WIN32
+    strcpy_s(this->Value, p);
+#elif __linux__
     strcpy(this->Value, p);
+#endif
 }

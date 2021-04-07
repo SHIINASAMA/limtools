@@ -28,7 +28,7 @@ public:
      * @param ipaddr 目标IP
      * @param port 目标端口
      */
-    DatagramSocket(SocketMode mode, char *ipaddr, unsigned short port);
+    DatagramSocket(SocketMode mode,const char *ipaddr, unsigned short port);
 
     /**
      * @brief 写入数据
