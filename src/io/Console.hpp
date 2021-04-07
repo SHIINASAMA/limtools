@@ -17,12 +17,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#define ltoa _ltoa_s
 #elif __linux__
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#define ltoa _ltoa
 #endif
 
 /**

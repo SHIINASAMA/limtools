@@ -196,7 +196,11 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
                 long l = va_arg(args, long);
                 ltoa(l, temp, 2);
                 int len = strlen(temp);
+#ifdef _WIN32
+                strcpy_s(nbuf, strlen(temp) + 1, temp);
+#elif __linux__
                 strcpy(nbuf, temp);
+#endif
                 nbuf += len;
                 fmt++;
                 header += 2;
@@ -208,7 +212,11 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
                 long l = va_arg(args, long);
                 ltoa(l, temp, 8);
                 int len = strlen(temp);
+#ifdef _WIN32
+                strcpy_s(nbuf, strlen(temp) + 1, temp);
+#elif __linux__
                 strcpy(nbuf, temp);
+#endif
                 nbuf += len;
                 fmt++;
                 header += 2;
@@ -220,7 +228,11 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
                 long l = va_arg(args, long);
                 ltoa(l, temp, 10);
                 int len = strlen(temp);
+#ifdef _WIN32
+                strcpy_s(nbuf, strlen(temp) + 1, temp);
+#elif __linux__
                 strcpy(nbuf, temp);
+#endif
                 nbuf += len;
                 fmt++;
                 header += 2;
@@ -232,7 +244,11 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
                 long l = va_arg(args, long);
                 ltoa(l, temp, 16);
                 int len = strlen(temp);
+#ifdef _WIN32
+                strcpy_s(nbuf, strlen(temp) + 1, temp);
+#elif __linux__
                 strcpy(nbuf, temp);
+#endif
                 nbuf += len;
                 fmt++;
                 header += 2;
@@ -244,7 +260,11 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
                 double d = va_arg(args, double);
                 sprintf(temp, "%lf", d);
                 int len = strlen(temp);
+#ifdef _WIN32
+                strcpy_s(nbuf, strlen(temp) + 1, temp);
+#elif __linux__
                 strcpy(nbuf, temp);
+#endif
                 nbuf += len;
                 fmt++;
                 header += 2;
@@ -254,7 +274,11 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
             {
                 char *temp = va_arg(args, char *);
                 int len = strlen(temp);
+#ifdef _WIN32
+                strcpy_s(nbuf, strlen(temp) + 1, temp);
+#elif __linux__
                 strcpy(nbuf, temp);
+#endif
                 nbuf += len;
                 fmt++;
                 header += 2;
