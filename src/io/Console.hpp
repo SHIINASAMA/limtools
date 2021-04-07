@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
-#define ltoa _ltoa_s
+#define ltoa(value, buf, radix) _ltoa_s(value, buf, 32, radix)
 #elif __linux__
 #include <stdio.h>
 #include <stdarg.h>
@@ -153,7 +153,7 @@ public:
      */
     static void ClearColor();
 
-    static void WriteColorful(const char *str,Colors fontColor);
+    static void WriteColorful(const char *str, Colors fontColor);
 
     /**
      * @brief 彩色输出

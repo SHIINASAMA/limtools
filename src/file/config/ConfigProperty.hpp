@@ -10,12 +10,22 @@
  */
 
 #include "../../io/Console.hpp"
-#include "../FileTools.hpp"
 
 #define NAME_LEN 32
 #define VALUE_LEN 96
 
 #pragma once
+
+/**
+ * @brief 用于在std::map中提供char*之间的比较方式 
+ */
+struct cmp
+{
+    bool operator()(const char *pc1, const char *pc2) const
+    {
+        return strcmp(pc1, pc2) < 0;
+    }
+};
 
 /**
  * @brief 属性类
