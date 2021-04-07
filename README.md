@@ -13,6 +13,8 @@
   - UDP通信服务端类 - **DatagrameSocketServer class**
   - TCP通信类 - **Socket class**
   - TCP通信服务端类 - **SocketServer class**
+    - Http请求类 - **Request class**
+    - Http响应类 - **Response class**
 - 线程相关类
   - 线程类 - **Thread class**
   - 安全线程类 - **SafeThread class**
