@@ -49,7 +49,7 @@ public:
     /**
      * @brief Get请求
      * 
-     * @return Response* 响应对象
+     * @return Response* 响应对象，会随着Request的销毁而销毁
      */
     Response *Get();
 

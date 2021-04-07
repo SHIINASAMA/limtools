@@ -65,7 +65,7 @@ void Response::Format(const char *buf, int len)
             char *value = new char[pos2 - pos1 - 4];
             memcpy(value, &buf[pos1 + 3], pos2 - pos1 - 5);
             value[pos2 - pos1 - 5] = '\0';
-            this->recvMap.insert(std::pair<char *, char *>(name, value));
+            this->recvMap[name] = value;
         }
     }
 }
