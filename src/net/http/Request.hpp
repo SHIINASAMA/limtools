@@ -24,7 +24,7 @@
 class Request
 {
 private:
-    std::string send_args;
+    std::string Args;
     Response *response = nullptr;
     char url[1024]{0};
     char ipaddr[16]{0};
@@ -58,12 +58,12 @@ public:
      * 
      * @details Post需要手动使用SetArgs设置Content-Length
      * 
-     * @param buf Post内容
-     * @param size Post内容长度
+     * @param content Post内容
+     * @param contentLenght Post内容长度
      * 
-     * @return Response* 响应对象，会随着Request的销毁而销毁
+     * @return 响应对象指针，会随着Request的销毁而销毁
      */
-    Response *Post(const char *content, int size);
+    Response *Post(const char *content, int contentLenght);
 
     /**
      * @brief 设置参数

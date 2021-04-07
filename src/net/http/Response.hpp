@@ -54,33 +54,23 @@ public:
      * @brief 响应参数Map
      * 
      */
-    std::map<char *, char *, ucmp> recvMap;
+    std::map<char *, char *, ucmp> Args;
 
     /**
      * @brief Http响应状态码
      * 
      */
-    unsigned short statusCode = 0;
+    unsigned short StatusCode = 0;
 
     /**
      * @brief 响应内容
      * 
      */
-    char *content = nullptr;
+    char *Content = nullptr;
 
     /**
      * @brief 响应内容长度
      * 
      */
-    int len = 0;
-
-    /**
-     * @brief 从buf中格式化数据
-     * 
-     * @param buf 缓存
-     * @param len 缓存长度
-     * 
-     * @return 返回报头长度
-     */
-    int Format(const char *buf, int len);
+    int ContentLength = 0;
 };

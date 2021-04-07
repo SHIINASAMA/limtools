@@ -20,42 +20,100 @@ Request::Request(const char *url, const char *ipaddr, unsigned short port)
     strcpy(this->url, url);
     strcpy(this->ipaddr, ipaddr);
 #endif
-
     this->port = port;
 }
 
 Request::~Request()
 {
-    delete this->response;
 }
 
 Response *Request::Get()
 {
+    //请求行以及参数
     char request_line[1024]{0};
     sprintf(request_line, "GET %s HTTP/1.1\r\n", this->url);
-    this->send_args.insert(0, request_line);
-    this->send_args.append("\r\n");
+    this->Args.insert(0, request_line);
+    this->Args.append("\r\n");
 
-    Socket *socket = new Socket(SocketMode::Client, this->ipaddr, this->port);
-    socket->Connect();
-    socket->Write(this->send_args.c_str(), this->send_args.length());
+    //连接服务器
+    auto socket = new Socket(SocketMode::Client, this->ipaddr, this->port);
+    if (socket->Connect())
+    {
+        return nullptr;
+    }
 
-    char buf[4096]{0};
-    int len = socket->Read(buf, 4096);
+    //发送请求头
+    if (!socket->Write(this->Args.c_str(), this->Args.length()))
+    {
+        return nullptr;
+    }
 
     this->response = new Response();
-    int recved = this->response->Format(buf, len);
-    if (recved != len)
-    {
-        if (this->response->recvMap.count((char *)"Content-Length") != 0)
-        {
-            long contentLen = atol(this->response->recvMap[(char *)"Content-Length"]) + 1;
+    char recv_buf[4096]{0};
+    int recv_lenght = socket->Read(recv_buf, 4096);
 
-            this->response->content = new char[contentLen];
-            memcpy(this->response->content, &buf[recved], recved);
-            socket->Read(&this->response->content[recved + 1], contentLen - recved - 2);
-            this->response->content[contentLen] = '\0';
+    //报文头
+    int status_line_lenght = 0;
+    for (int i = 0; i < recv_lenght; i++)
+    {
+        if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n')
+        {
+            status_line_lenght = i + 1;
+            break;
         }
+    }
+
+    //状态码
+    this->response->StatusCode = (recv_buf[9] - 48) * 100 +
+                                 (recv_buf[10] - 48) * 10 +
+                                 (recv_buf[11] - 48);
+
+    int header_length = 0;
+    //报文参数
+    int prepos = status_line_lenght + 1;
+    int pos1 = prepos;
+    int pos2 = prepos;
+    for (int i = prepos; i < recv_lenght; i++)
+    {
+        //键值分割点
+        if (recv_buf[i] == ':' && recv_buf[i + 1] == ' ')
+        {
+            pos1 = i - 1;
+            i += 2;
+        }
+        //行末
+        else if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n')
+        {
+            prepos = pos2;
+            pos2 = i + 2;
+            i += 2;
+
+            int key_lenght = pos1 - prepos + 1;
+            char *key = new char[key_lenght + 1];
+            memcpy(key, &recv_buf[prepos], key_lenght);
+            key[key_lenght] = '\0';
+
+            int value_lenght = pos2 - pos1 - 5;
+            char *value = new char[value_lenght + 1];
+            memcpy(value, &recv_buf[pos1 + 3], value_lenght);
+            value[value_lenght] = '\0';
+
+            this->response->Args.insert(std::make_pair(key, value));
+
+            if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n')
+            {
+                break;
+            }
+        }
+    }
+
+    if (this->response->Args.count((char*)"Content-Length") == 1)
+    {
+        this->response->ContentLength = atol(this->response->Args[(char *)"Content-Length"]);
+
+        this->response->Content = new char[this->response->ContentLength + 1];
+        socket->Read(this->response->Content, this->response->ContentLength);
+        this->response->Content[this->response->ContentLength] = '\0';
     }
 
     socket->Close();
@@ -65,43 +123,11 @@ Response *Request::Get()
 
 Response *Request::Post(const char *content, int size)
 {
-    char request_line[1024]{0};
-    sprintf(request_line, "POST %s HTTP/1.1\r\n", this->url);
-    this->send_args.insert(0, request_line);
-    this->send_args.append("\r\n");
-
-    Socket *socket = new Socket(SocketMode::Client, this->ipaddr, this->port);
-    socket->Connect();
-    socket->Write(this->send_args.c_str(), this->send_args.length());
-
-    socket->Write(content, size);
-
-    char buf[4096]{0};
-    int len = socket->Read(buf, 4096);
-
-    this->response = new Response();
-    long recved = this->response->Format(buf, len);
-    if (recved != len)
-    {
-        if (this->response->recvMap.count((char *)"Content-Length") != 0)
-        {
-            long contentLen = atol(this->response->recvMap[(char *)"Content-Length"]) + 1;
-
-            this->response->content = new char[contentLen];
-            memcpy(this->response->content, &buf[recved], recved);
-            socket->Read(&this->response->content[recved + 1], contentLen - recved - 1);
-            this->response->content[contentLen] = '\0';
-        }
-    }
-
-    auto res = socket->Close();
-    // delete socket;
-    return this->response;
 }
 
 void Request::SetArg(const char *key, const char *value)
 {
     char buf[512]{0};
     sprintf(buf, "%s: %s\r\n", key, value);
-    send_args.append(buf);
+    Args.append(buf);
 }

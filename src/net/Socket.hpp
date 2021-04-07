@@ -54,7 +54,7 @@ enum class ShutdownMode
 };
 
 #ifdef _WIN32
-#define _WIN32_WINNT 0x0600
+// #define _WIN32_WINNT 0x0600
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <WinSock2.h>
 #include <WS2tcpip.h>
