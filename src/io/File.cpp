@@ -30,7 +30,7 @@ File::~File()
 #endif
 }
 
-bool File::Open(char *path, AccessMode accessMode, OpenMode openMode)
+bool File::Open(const char *path, AccessMode accessMode, OpenMode openMode)
 {
 #ifdef _WIN32
     if (this->id != INVALID_HANDLE_VALUE)

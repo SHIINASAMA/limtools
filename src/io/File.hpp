@@ -148,7 +148,7 @@ public:
      * @return true 打开成功
      * @return false 打开失败
      */
-    bool Open(char *path, AccessMode accessMode, OpenMode openMode);
+    bool Open(const char *path, AccessMode accessMode, OpenMode openMode);
 
     /**
      * @brief 向文件写入数据
