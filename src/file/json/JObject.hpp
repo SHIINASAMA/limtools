@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string.h>
+#include <map>
+#include "../config/ConfigProperty.hpp"
 
 /**
  * @brief Json数据类型
@@ -24,20 +26,19 @@ enum class JObjectType
      */
     String,
     /**
-     * @brief 整型（数字）
+     * @brief 整型
      * 
      */
-    Int,
-    /**
-     * @brief 浮点型（数字）
-     * 
-     */
-    Float,
+    Number,
     /**
      * @brief 空
      * 
      */
     Null,
+    /**
+     * @brief 布尔值
+     */
+    Bool,
 };
 
 class JObject
@@ -47,11 +48,36 @@ private:
     int length = 0;
     JObjectType type = JObjectType::JObject;
 
-    //除空操作
-    void removeSpace(const char *buf);
+    static bool isSpace(char ch);
 
 public:
-    JObject(const char *buf);
+    std::map<char *, JObject *, cmp> Data;
 
+    /**
+     * @brief 构造函数
+     */
+    JObject();
+
+    /**
+     * @brief 销毁资源
+     */
     ~JObject();
+
+    /**
+     * @brief 格式化 JObject
+     * @details Json -> JObject
+     * @param buf 目标缓存
+     */
+    void Format(const char *buf);
+
+
+    /**
+     * @brief 构建 Json
+     * @details JObject -> Json
+     * @param buf 目标缓存
+     * @return 当 buf 为 nullptr 时返回 buf 所需长度
+     */
+    int Build(char *buf);
+
+    JObjectType GetType();
 };
