@@ -105,6 +105,7 @@ void JObject::Format(const char *buf)
                             key = nullptr;
                             start_pos = -1;
                             medium_pos = -1;
+                            goto end;
                         }
                         else if (!isSpace(buf[k]))
                         {
@@ -115,11 +116,6 @@ void JObject::Format(const char *buf)
                             break;
                         }
                     }
-                    delete key;
-                    key = nullptr;
-                    start_pos = -1;
-                    medium_pos = -1;
-                    break;
                 }
                 else if (buf[j] == '{')
                 {
@@ -185,7 +181,7 @@ void JObject::Format(const char *buf)
                          buf[j + 3] == 's' &&
                          buf[j + 4] == 'e')
                 {
-                    for (int k = end_pos; k > medium_pos; k--)
+                    for (int k = end_pos - 1; k > medium_pos; k--)
                     {
                         if (buf[k] == 'e' && &buf[k] == &buf[j + 4])
                         {
@@ -193,9 +189,9 @@ void JObject::Format(const char *buf)
                             auto child = new JObject();
                             child->type = JObjectType::Bool;
 
-                            int value_length = k - j;
+                            int value_length = k - j + 2;
                             child->buf = new char[value_length];
-                            memcpy(child->buf, &buf[j + 1], value_length - 1);
+                            memcpy(child->buf, &buf[j], value_length - 1);
                             child->buf[value_length - 1] = '\0';
                             child->length = value_length;
 
@@ -203,6 +199,7 @@ void JObject::Format(const char *buf)
                             key = nullptr;
                             start_pos = -1;
                             medium_pos = -1;
+                            goto end;
                         }
                         else if (!isSpace(buf[k]))
                         {
@@ -224,7 +221,7 @@ void JObject::Format(const char *buf)
                          buf[j + 2] == 'u' &&
                          buf[j + 3] == 'e')
                 {
-                    for (int k = end_pos; k > medium_pos; k--)
+                    for (int k = end_pos - 1; k > medium_pos; k--)
                     {
                         if (buf[k] == 'e' && &buf[k] == &buf[j + 3])
                         {
@@ -232,9 +229,9 @@ void JObject::Format(const char *buf)
                             auto child = new JObject();
                             child->type = JObjectType::Bool;
 
-                            int value_length = k - j;
+                            int value_length = k - j + 2;
                             child->buf = new char[value_length];
-                            memcpy(child->buf, &buf[j + 1], value_length - 1);
+                            memcpy(child->buf, &buf[j], value_length - 1);
                             child->buf[value_length - 1] = '\0';
                             child->length = value_length;
 
@@ -242,6 +239,7 @@ void JObject::Format(const char *buf)
                             key = nullptr;
                             start_pos = -1;
                             medium_pos = -1;
+                            goto end;
                         }
                         else if (!isSpace(buf[k]))
                         {
@@ -263,7 +261,7 @@ void JObject::Format(const char *buf)
                          buf[j + 2] == 'l' &&
                          buf[j + 3] == 'l')
                 {
-                    for (int k = end_pos; k > medium_pos; k--)
+                    for (int k = end_pos - 1; k > medium_pos; k--)
                     {
                         if (buf[k] == 'l' && &buf[k] == &buf[j + 3])
                         {
@@ -271,9 +269,9 @@ void JObject::Format(const char *buf)
                             auto child = new JObject();
                             child->type = JObjectType::Null;
 
-                            int value_length = k - j;
+                            int value_length = k - j + 2;
                             child->buf = new char[value_length];
-                            memcpy(child->buf, &buf[j + 1], value_length - 1);
+                            memcpy(child->buf, &buf[j], value_length - 1);
                             child->buf[value_length - 1] = '\0';
                             child->length = value_length;
 
@@ -281,6 +279,7 @@ void JObject::Format(const char *buf)
                             key = nullptr;
                             start_pos = -1;
                             medium_pos = -1;
+                            goto end;
                         }
                         else if (!isSpace(buf[k]))
                         {
@@ -299,7 +298,7 @@ void JObject::Format(const char *buf)
                 }
                 else if (buf[j] >= '0' && buf[j] <= '9')
                 {
-                    for (int k = end_pos; k > medium_pos; k--)
+                    for (int k = end_pos - 1; k > medium_pos; k--)
                     {
                         if (buf[k] >= '0' && buf[k] <= '9')
                         {
@@ -307,9 +306,9 @@ void JObject::Format(const char *buf)
                             auto child = new JObject();
                             child->type = JObjectType::Number;
 
-                            int value_length = k - j;
+                            int value_length = k - j + 2;
                             child->buf = new char[value_length];
-                            memcpy(child->buf, &buf[j + 1], value_length - 1);
+                            memcpy(child->buf, &buf[j], value_length - 1);
                             child->buf[value_length - 1] = '\0';
                             child->length = value_length;
 
@@ -317,6 +316,7 @@ void JObject::Format(const char *buf)
                             key = nullptr;
                             start_pos = -1;
                             medium_pos = -1;
+                            goto end;
                         }
                         else if (!isSpace(buf[k]))
                         {
@@ -351,6 +351,8 @@ void JObject::Format(const char *buf)
                 }
             }
         }
+        end:
+        continue;
     }
 }
 

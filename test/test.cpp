@@ -3,13 +3,11 @@
 
 int main()
 {
-    const char * content = "{\n"
-                           "  \"Name\": \"Nihao\"\n"
-                           "}";
+    const char *content = "{\"Name\": \"Mike\",\"Age\": 18,\"Sex\": null,\"F\": false,\"T\": true}";
 
-    JObject* obj = new JObject();
+    JObject *obj = new JObject();
     obj->Format(content);
-    auto res = obj->Data["Name"];
+    auto res = obj->Data;
     delete obj;
     return 0;
 }

@@ -26,7 +26,7 @@ enum class JObjectType
      */
     String,
     /**
-     * @brief 整型
+     * @brief 数字
      * 
      */
     Number,
@@ -44,13 +44,13 @@ enum class JObjectType
 class JObject
 {
 private:
-    char *buf = nullptr;
     int length = 0;
     JObjectType type = JObjectType::JObject;
-
     static bool isSpace(char ch);
 
 public:
+
+    char *buf = nullptr;
     std::map<char *, JObject *, cmp> Data;
 
     /**
