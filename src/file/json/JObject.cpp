@@ -29,6 +29,8 @@ JObject::~JObject()
             delete[] itor->first;
             delete itor->second;
         }
+
+	delete this->Data;
     }
     else if (this->type == JObjectType::Array)
     {
@@ -36,6 +38,8 @@ JObject::~JObject()
         {
             delete *itor;
         }
+
+	delete this->List;
     }
 }
 
@@ -620,7 +624,7 @@ bool JObject::GetDouble(char *key, double *buf)
                 return false;
             }
 
-            sscanf(itor->second->buf, "%lf", *buf);
+            sscanf(itor->second->buf, "%lf", buf);
             return true;
         }
         else
