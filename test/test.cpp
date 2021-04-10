@@ -9,7 +9,22 @@ int main()
                     "  \"me\": {\n"
                     "    \"name\": \"kaoru\",\n"
                     "    \"age\": 18\n"
-                    "  }\n"
+                    "  },\n"
+                    "  \"list\": [\n"
+                    "    {\n"
+                    "      \"name\": \"kaoru\",\n"
+                    "      \"age\": 19\n"
+                    "    },\n"
+                    "    {\n"
+                    "      \"name\": \"shiina\",\n"
+                    "      \"age\": 20\n"
+                    "    },\n"
+                    "    {\n"
+                    "      \"name\": \"kaori\",\n"
+                    "      \"age\": 10\n"
+                    "    }\n"
+                    "  ],\n"
+                    "  \"null\": null\n"
                     "}";
 
     JObject *obj = new JObject();

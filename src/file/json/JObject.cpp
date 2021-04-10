@@ -11,12 +11,19 @@ JObject::~JObject()
         delete[] this->buf;
     }
 
-    if (this->Data != nullptr)
+    if (this->type == JObjectType::JObject)
     {
         for (auto itor = this->Data->begin(); itor != this->Data->end(); itor++)
         {
             delete[] itor->first;
             delete itor->second;
+        }
+    }
+    else if (this->type == JObjectType::Array)
+    {
+        for (auto itor = this->List->begin(); itor != this->List->end(); itor++)
+        {
+            delete *itor;
         }
     }
 }
@@ -26,7 +33,7 @@ JObjectType JObject::GetType()
     return this->type;
 }
 
-void JObject::format(const char *buf, int length)
+void JObject::format(char *buf, int length)
 {
     int start_pos = -1;  //第一个双引号
     int medium_pos = -1; //第二个双引号
@@ -125,27 +132,30 @@ void JObject::format(const char *buf, int length)
                     key = nullptr;
                     start_pos = -1;
                     medium_pos = -1;
-                    break;
+                    i = j + value_length + 2;
+                    goto end;
                 }
                 else if (buf[j] == '[')
                 {
                     //Array
                     auto child = new JObject();
                     child->type = JObjectType::Array;
-                    child->Data = new std::map<char *, JObject *, cmp>();
+                    child->List = new std::vector<JObject *>();
 
                     int value_length = getFormLenght(&buf[j]);
-                    child->buf = new char[value_length + 2];
-                    memcpy(child->buf, &buf[j + 1], value_length + 1);
-                    child->buf[value_length + 1] = '\0';
+                    child->buf = new char[value_length + 1];
+                    memcpy(child->buf, &buf[j + 1], value_length);
+                    child->buf[value_length] = '\0';
 
-                    //child->Format(child->buf);
+                    child->formatArray(child->buf, value_length);
 
                     this->Data->insert(std::make_pair(key, child));
+
                     key = nullptr;
                     start_pos = -1;
                     medium_pos = -1;
-                    break;
+                    i = j + value_length + 2;
+                    goto end;
                 }
                 else if (buf[j + 0] == 'f' &&
                          buf[j + 1] == 'a' &&
@@ -328,22 +338,43 @@ void JObject::format(const char *buf, int length)
     }
 }
 
-void JObject::Format(char *buf, int length)
+void JObject::formatArray(char *buf, int length)
 {
-    this->buf = new char[length + 1];
-    memcpy(this->buf, buf, length);
-    this->buf[length - 1] = '\0';
+    int brace = 0;
+    int start = 0;
+    int end = 0;
+    for (int pos = 0; pos < length; pos++)
+    {
+        if (buf[pos] == '{')
+        {
+            brace++;
+            if (brace == 1)
+            {
+                start = pos;
+            }
+        }
+        else if (buf[pos] == '}')
+        {
+            brace--;
+            if (brace == 0)
+            {
+                end = pos;
 
-    this->Data = new std::map<char *, JObject *, cmp>();
+                int len = end - start + 1;
+                auto child = new JObject();
+                child->type = JObjectType::JObject;
+                child->Data = new std::map<char *, JObject *, cmp>();
 
-    pretreatment(this->buf, &length);
-    this->length = length;
-    this->format(&this->buf[1], length - 2);
-}
+                child->buf = new char[len];
+                memcpy(child->buf, &buf[start + 1], len);
+                child->buf[len - 1] = '\0';
 
-int JObject::Build(char *buf)
-{
-    return 0;
+                child->format(&buf[start + 1], len);
+
+                this->List->push_back(child);
+            }
+        }
+    }
 }
 
 bool JObject::isSpace(char ch)
@@ -451,23 +482,42 @@ int JObject::getFormLenght(const char *buf)
             int brackets_end = 0;
             for (int pos = 0;; pos++)
             {
-                if (buf[0] == '[')
+                if (buf[pos] == '[')
                 {
                     brackets_num++;
                 }
-                else if (buf[0] == ']')
+                else if (buf[pos] == ']')
                 {
                     brackets_num--;
                     if (brackets_num == 0)
                     {
                         brackets_end = pos - 1;
+                        break;
                     }
                 }
             }
-            return brackets_num;
+            return brackets_end;
         }
         default:
             return -1;
             break;
     }
+}
+
+void JObject::Format(char *buf, int length)
+{
+    this->buf = new char[length + 1];
+    memcpy(this->buf, buf, length + 1);
+    this->buf[length] = '\0';
+
+    this->Data = new std::map<char *, JObject *, cmp>();
+
+    pretreatment(this->buf, &length);
+    this->length = length;
+    this->format(&this->buf[1], length);
+}
+
+int JObject::Build(char *buf)
+{
+    return 0;
 }

@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <map>
+#include <vector>
 #include "../config/ConfigProperty.hpp"
 
 /**
@@ -53,12 +54,16 @@ private:
 
     static int getFormLenght(const char *buf);
 
-    void format(const char *buf, int length);
+    void format(char *buf, int length);
 
-public:
+    void formatArray(char *buf, int length);
 
     char *buf = nullptr;
+
+public:
     std::map<char *, JObject *, cmp> *Data = nullptr;
+
+    std::vector<JObject *> *List = nullptr;
 
     /**
      * @brief 构造函数
