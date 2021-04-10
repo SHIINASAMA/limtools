@@ -46,12 +46,19 @@ class JObject
 private:
     int length = 0;
     JObjectType type = JObjectType::JObject;
+
     static bool isSpace(char ch);
+
+    static void pretreatment(char *buf, int *length);
+
+    static int getFormLenght(const char *buf);
+
+    void format(const char *buf, int length);
 
 public:
 
     char *buf = nullptr;
-    std::map<char *, JObject *, cmp> Data;
+    std::map<char *, JObject *, cmp> *Data = nullptr;
 
     /**
      * @brief 构造函数
@@ -67,9 +74,9 @@ public:
      * @brief 格式化 JObject
      * @details Json -> JObject
      * @param buf 目标缓存
+     * @param length 缓存大小
      */
-    void Format(const char *buf);
-
+    void Format(char *buf, int length);
 
     /**
      * @brief 构建 Json

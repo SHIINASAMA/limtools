@@ -11,10 +11,13 @@ JObject::~JObject()
         delete[] this->buf;
     }
 
-    for (auto itor = this->Data.begin(); itor != this->Data.end(); itor++)
+    if (this->Data != nullptr)
     {
-        delete[] itor->first;
-        delete itor->second;
+        for (auto itor = this->Data->begin(); itor != this->Data->end(); itor++)
+        {
+            delete[] itor->first;
+            delete itor->second;
+        }
     }
 }
 
@@ -23,27 +26,14 @@ JObjectType JObject::GetType()
     return this->type;
 }
 
-void JObject::Format(const char *buf)
+void JObject::format(const char *buf, int length)
 {
-    int len = strlen(buf);
-
-    //首先确定类型
-    switch (buf[0])
-    {
-        case '{':
-            this->type = JObjectType::JObject;
-            break;
-        case '[':
-            this->type = JObjectType::Array;
-            break;
-    }
-
     int start_pos = -1;  //第一个双引号
     int medium_pos = -1; //第二个双引号
     int end_pos = 0;    //逗号或者反花括号
     int quotes_num = 0; //双引号的数目
     char *key = nullptr;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < length; i++)
     {
         //转义符号直接跳过
         if (buf[i] == '\\')
@@ -79,7 +69,7 @@ void JObject::Format(const char *buf)
             continue;
         }
 
-        if ((buf[i] == ',' || buf[i] == '}') && quotes_num % 2 == 0)
+        if ((buf[i] == ',' || buf[i] == '}' || buf[i] == ']') && quotes_num % 2 == 0)
         {
             end_pos = i;
 
@@ -101,7 +91,7 @@ void JObject::Format(const char *buf)
                             child->buf[value_length - 1] = '\0';
                             child->length = value_length;
 
-                            this->Data.insert(std::make_pair(key, child));
+                            this->Data->insert(std::make_pair(key, child));
                             key = nullptr;
                             start_pos = -1;
                             medium_pos = -1;
@@ -119,28 +109,19 @@ void JObject::Format(const char *buf)
                 }
                 else if (buf[j] == '{')
                 {
-                    for (int k = end_pos - 1; k > medium_pos; k--)
-                    {
-                        if (buf[k] == '}')
-                        {
-                            //JObject
-                            auto child = new JObject();
-                            child->type = JObjectType::JObject;
+                    //JObject
+                    auto child = new JObject();
+                    child->type = JObjectType::JObject;
+                    child->Data = new std::map<char *, JObject *, cmp>();
 
-                            int value_length = k - j;
-                            child->buf = new char[value_length];
-                            memcpy(child->buf, &buf[j + 1], value_length - 1);
-                            child->buf[value_length - 1] = '\0';
+                    int value_length = getFormLenght(&buf[j]);
+                    child->buf = new char[value_length + 2];
+                    memcpy(child->buf, &buf[j + 1], value_length + 1);
+                    child->buf[value_length + 1] = '\0';
 
-                            child->Format(child->buf);
+                    child->format(child->buf, value_length + 1);
 
-                            this->Data.insert(std::make_pair(key, child));
-                            key = nullptr;
-                            start_pos = -1;
-                            medium_pos = -1;
-                        }
-                    }
-                    delete key;
+                    this->Data->insert(std::make_pair(key, child));
                     key = nullptr;
                     start_pos = -1;
                     medium_pos = -1;
@@ -148,28 +129,19 @@ void JObject::Format(const char *buf)
                 }
                 else if (buf[j] == '[')
                 {
-                    for (int k = end_pos - 1; k > medium_pos; k--)
-                    {
-                        if (buf[k] == ']')
-                        {
-                            //Array
-                            auto child = new JObject();
-                            child->type = JObjectType::Array;
+                    //Array
+                    auto child = new JObject();
+                    child->type = JObjectType::Array;
+                    child->Data = new std::map<char *, JObject *, cmp>();
 
-                            int value_length = k - j;
-                            child->buf = new char[value_length];
-                            memcpy(child->buf, &buf[j + 1], value_length - 1);
-                            child->buf[value_length - 1] = '\0';
+                    int value_length = getFormLenght(&buf[j]);
+                    child->buf = new char[value_length + 2];
+                    memcpy(child->buf, &buf[j + 1], value_length + 1);
+                    child->buf[value_length + 1] = '\0';
 
-                            child->Format(child->buf);
+                    //child->Format(child->buf);
 
-                            this->Data.insert(std::make_pair(key, child));
-                            key = nullptr;
-                            start_pos = -1;
-                            medium_pos = -1;
-                        }
-                    }
-                    delete key;
+                    this->Data->insert(std::make_pair(key, child));
                     key = nullptr;
                     start_pos = -1;
                     medium_pos = -1;
@@ -195,7 +167,7 @@ void JObject::Format(const char *buf)
                             child->buf[value_length - 1] = '\0';
                             child->length = value_length;
 
-                            this->Data.insert(std::make_pair(key, child));
+                            this->Data->insert(std::make_pair(key, child));
                             key = nullptr;
                             start_pos = -1;
                             medium_pos = -1;
@@ -235,7 +207,7 @@ void JObject::Format(const char *buf)
                             child->buf[value_length - 1] = '\0';
                             child->length = value_length;
 
-                            this->Data.insert(std::make_pair(key, child));
+                            this->Data->insert(std::make_pair(key, child));
                             key = nullptr;
                             start_pos = -1;
                             medium_pos = -1;
@@ -275,7 +247,7 @@ void JObject::Format(const char *buf)
                             child->buf[value_length - 1] = '\0';
                             child->length = value_length;
 
-                            this->Data.insert(std::make_pair(key, child));
+                            this->Data->insert(std::make_pair(key, child));
                             key = nullptr;
                             start_pos = -1;
                             medium_pos = -1;
@@ -312,7 +284,7 @@ void JObject::Format(const char *buf)
                             child->buf[value_length - 1] = '\0';
                             child->length = value_length;
 
-                            this->Data.insert(std::make_pair(key, child));
+                            this->Data->insert(std::make_pair(key, child));
                             key = nullptr;
                             start_pos = -1;
                             medium_pos = -1;
@@ -356,6 +328,19 @@ void JObject::Format(const char *buf)
     }
 }
 
+void JObject::Format(char *buf, int length)
+{
+    this->buf = new char[length + 1];
+    memcpy(this->buf, buf, length);
+    this->buf[length - 1] = '\0';
+
+    this->Data = new std::map<char *, JObject *, cmp>();
+
+    pretreatment(this->buf, &length);
+    this->length = length;
+    this->format(&this->buf[1], length - 2);
+}
+
 int JObject::Build(char *buf)
 {
     return 0;
@@ -371,5 +356,118 @@ bool JObject::isSpace(char ch)
             return true;
         default:
             return false;
+    }
+}
+
+void JObject::pretreatment(char *buf, int *length)
+{
+    int space_num = 0;
+    int quotes_num = 0;
+    for (int pos = 0; pos < *length; pos++)
+    {
+        //双引号照搬并使 quotes_num 自增
+        if (buf[pos] == '\"')
+        {
+            buf[pos - space_num] = buf[pos];
+            quotes_num++;
+            continue;
+        }
+
+        //直接照搬并跳过转义字符
+        if (buf[pos] == '\\')
+        {
+            buf[pos - space_num] = buf[pos];
+            buf[pos - space_num + 1] = buf[pos + 1];
+            pos += 1;
+            continue;
+        }
+
+        //使 space_num 自增并移除空白
+        if (buf[pos] == '\n' ||
+            buf[pos] == '\t' ||
+            buf[pos] == '\r' ||
+            buf[pos] == ' ')
+        {
+            //在双引号之外
+            if (quotes_num % 2 == 0)
+            {
+                space_num++;
+            }
+                //双引号内的直接复制
+            else
+            {
+                buf[pos - space_num] = buf[pos];
+            }
+        }
+            //直接复制
+        else
+        {
+            buf[pos - space_num] = buf[pos];
+        }
+    }
+
+    buf[*length - space_num] = '\0';
+    *length -= space_num + 1;
+}
+
+int JObject::getFormLenght(const char *buf)
+{
+    switch (buf[0])
+    {
+        case '{': // JObject
+        {
+            // brace_start 必定是 0
+            // case { brace_num + 1
+            // case } brace_num - 1
+            // case brace_num == 0, brace_end = pos
+            int brace_num = 0;
+            int brace_end = 0;
+            for (int pos = 0;; pos++)
+            {
+                if (buf[pos] == '{')
+                {
+                    brace_num += 1;
+                }
+                else if (buf[pos] == '}')
+                {
+                    brace_num -= 1;
+
+                    if (brace_num == 0)
+                    {
+                        brace_end = pos - 1;
+                        break;;
+                    }
+                }
+            }
+            return brace_end;
+        }
+        case '[': // Array
+        {
+            // brackets_start 必定是 0
+            // case { _num + 1
+            // case } brackets_num - 1
+            // case brackets_num == 0, brackets_end = pos
+            int brackets_num = 0;
+            int brackets_end = 0;
+            for (int pos = 0;; pos++)
+            {
+                if (buf[0] == '[')
+                {
+                    brackets_num++;
+                }
+                else if (buf[0] == ']')
+                {
+                    brackets_num--;
+                    if (brackets_num == 0)
+                    {
+                        brackets_end = pos - 1;
+                    }
+                }
+            }
+            return brackets_num;
+        }
+        default:
+            return -1;
+            break;
     }
 }
