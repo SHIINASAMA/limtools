@@ -1,3 +1,14 @@
+/**
+ * @file JObject.cpp
+ * @author kaoru (shiina_kaoru@outlook.com)
+ * @brief Json 对象类定义
+ * @version 0.1
+ * @date 2021-04-10
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include "JObject.hpp"
 
 JObject::JObject()
@@ -104,7 +115,7 @@ void JObject::format(char *buf, int length)
                             medium_pos = -1;
                             goto end;
                         }
-                        else if (!isSpace(buf[k]))
+                        else if (!isSpace(buf[end_pos - 1]))
                         {
                             delete key;
                             key = nullptr;
@@ -121,7 +132,7 @@ void JObject::format(char *buf, int length)
                     child->type = JObjectType::JObject;
                     child->Data = new std::map<char *, JObject *, cmp>();
 
-                    int value_length = getFormLenght(&buf[j]);
+                    int value_length = getFormLength(&buf[j]);
                     child->buf = new char[value_length + 2];
                     memcpy(child->buf, &buf[j + 1], value_length + 1);
                     child->buf[value_length + 1] = '\0';
@@ -142,7 +153,7 @@ void JObject::format(char *buf, int length)
                     child->type = JObjectType::Array;
                     child->List = new std::vector<JObject *>();
 
-                    int value_length = getFormLenght(&buf[j]);
+                    int value_length = getFormLength(&buf[j]);
                     child->buf = new char[value_length + 1];
                     memcpy(child->buf, &buf[j + 1], value_length);
                     child->buf[value_length] = '\0';
@@ -336,6 +347,13 @@ void JObject::format(char *buf, int length)
         end:
         continue;
     }
+
+    if (this->type == JObjectType::JObject)
+    {
+        delete this->buf;
+        this->buf = nullptr;
+        this->length = 0;
+    }
 }
 
 void JObject::formatArray(char *buf, int length)
@@ -375,6 +393,8 @@ void JObject::formatArray(char *buf, int length)
             }
         }
     }
+    delete this->buf;
+    this->buf = nullptr;
 }
 
 bool JObject::isSpace(char ch)
@@ -441,7 +461,7 @@ void JObject::pretreatment(char *buf, int *length)
     *length -= space_num + 1;
 }
 
-int JObject::getFormLenght(const char *buf)
+int JObject::getFormLength(const char *buf)
 {
     switch (buf[0])
     {
@@ -466,7 +486,7 @@ int JObject::getFormLenght(const char *buf)
                     if (brace_num == 0)
                     {
                         brace_end = pos - 1;
-                        break;;
+                        break;
                     }
                 }
             }

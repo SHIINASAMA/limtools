@@ -1,3 +1,14 @@
+/**
+ * @file JObject.hpp
+ * @author kaoru (shiina_kaoru@outlook.com)
+ * @brief Json 对象类声明
+ * @version 0.1
+ * @date 2021-04-10
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #pragma once
 
 #include <string.h>
@@ -42,6 +53,10 @@ enum class JObjectType
     Bool,
 };
 
+/**
+ * @brief Json对象类
+ * 
+ */
 class JObject
 {
 private:
@@ -52,7 +67,7 @@ private:
 
     static void pretreatment(char *buf, int *length);
 
-    static int getFormLenght(const char *buf);
+    static int getFormLength(const char *buf);
 
     void format(char *buf, int length);
 
