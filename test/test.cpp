@@ -6,6 +6,7 @@ int main()
     char *content = "{\n"
                     "  \"t\": true,\n"
                     "  \"f\": false,\n"
+                    "  \"number\": 65535,\n"
                     "  \"me\": {\n"
                     "    \"name\": \"kaoru\",\n"
                     "    \"age\": 18\n"
@@ -29,6 +30,10 @@ int main()
 
     JObject *obj = new JObject();
     obj->Format(content, strlen(content));
+
+    int a;
+    auto res = obj->GetInt("number", &a);
+
     delete obj;
     return 0;
 }

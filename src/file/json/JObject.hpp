@@ -106,5 +106,63 @@ public:
      */
     int Build(char *buf);
 
+    /**
+     * @brief 获取 JObject 类型
+     * @return 类型
+     */
     JObjectType GetType();
+
+    /**
+     * @brief 获取 Length 属性
+     * @return Length
+     */
+    int GetLength();
+
+    /**
+     * @brief 获取键对应的值的 Bool 类型数据
+     * @param key 目标键
+     * @param buf 目标缓存
+     * @return 是否获取成功
+     */
+    bool GetBool(char *key, bool *buf);
+
+    /**
+     * @brief 获取键对应的值的 Int 类型数据
+     * @param key 目标键
+     * @param buf 目标缓存
+     * @return 是否获取成功
+     */
+    bool GetInt(char *key, int *buf);
+
+    /**
+     * @brief 获取键对应的值的 Double 类型数据
+     * @param key 目标键
+     * @param buf 目标缓存
+     * @return 是否获取成功
+     */
+    bool GetDouble(char *key, double *buf);
+
+    /**
+     * @brief 获取键对应的值的 Char* 类型数据
+     * @param key 目标键
+     * @param buf 目标缓存
+     * @return 是否获取成功
+     */
+    bool GetString(char *key, const char *buf);
+
+    /**
+     * @brief 获取键对应的 JObject 的 JObjectType
+     * @param key 目标键
+     * @param buf 目标缓存
+     * @return 是否获取成功
+     */
+    bool GetType(char *key, JObjectType *buf);
+
+    /**
+     * @brief 获取键对应的 JObject 的 Length
+     * @param key 目标键
+     * @param buf 目标缓存
+     * @return 是否获取成功
+     */
+    bool GetLength(char *key, int *buf);
 };

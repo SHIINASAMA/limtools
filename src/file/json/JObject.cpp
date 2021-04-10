@@ -541,3 +541,163 @@ int JObject::Build(char *buf)
 {
     return 0;
 }
+
+int JObject::GetLength()
+{
+    return this->length;
+}
+
+bool JObject::GetBool(char *key, bool *buf)
+{
+    if (this->Data != nullptr)
+    {
+        auto itor = this->Data->find(key);
+        if (itor != this->Data->end())
+        {
+            if (itor->second->type != JObjectType::Bool)
+            {
+                return false;
+            }
+
+
+            if (itor->first[0] == 't')
+            {
+                *buf = true;
+            }
+            else
+            {
+                *buf = false;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool JObject::GetInt(char *key, int *buf)
+{
+    if (this->Data != nullptr)
+    {
+        auto itor = this->Data->find(key);
+        if (itor != this->Data->end())
+        {
+            if (itor->second->type != JObjectType::Number)
+            {
+                return false;
+            }
+
+
+            sscanf(itor->second->buf, "%d", buf);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool JObject::GetDouble(char *key, double *buf)
+{
+    if (this->Data != nullptr)
+    {
+        auto itor = this->Data->find(key);
+        if (itor != this->Data->end())
+        {
+            if (itor->second->type != JObjectType::Number)
+            {
+                return false;
+            }
+
+            sscanf(itor->second->buf, "%lf", *buf);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool JObject::GetString(char *key, const char *buf)
+{
+    if (this->Data != nullptr)
+    {
+        auto itor = this->Data->find(key);
+        if (itor != this->Data->end())
+        {
+            if (itor->second->type != JObjectType::String)
+            {
+                return false;
+            }
+
+            buf = itor->second->buf;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool JObject::GetType(char *key, JObjectType *buf)
+{
+    if (this->Data != nullptr)
+    {
+        auto itor = this->Data->find(key);
+        if (itor != this->Data->end())
+        {
+            *buf = itor->second->type;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool JObject::GetLength(char *key, int *buf)
+{
+    if (this->Data != nullptr)
+    {
+        auto itor = this->Data->find(key);
+        if (itor != this->Data->end())
+        {
+            *buf = itor->second->length;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
