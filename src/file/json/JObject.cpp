@@ -579,6 +579,77 @@ int JObject::build(char *buf)
     }
     else
     {
+        int length = -1;
+
+        if (this->type == JObjectType::JObject)
+        {
+            buf[++length] = '{';
+
+            // size 大于零则要添加逗号
+            int size = 0;
+            for (auto itor = this->Data->begin(); itor != this->Data->end(); itor++)
+            {
+                if (size > 0)
+                {
+                    buf[++length] = ',';
+                }
+
+                // key
+                buf[++length] = '\"';
+                int key_length = strlen(itor->first);
+                memcpy(&buf[++length], itor->first, key_length);
+                buf[length += key_length] = '\"';
+                buf[++length] = ':';
+
+                if (itor->second->type == JObjectType::JObject || itor->second->type == JObjectType::Array)
+                {
+                    length += itor->second->build(&buf[++length]);
+                }
+                else
+                {
+                    if (itor->second->type == JObjectType::String)
+                    {
+                        buf[++length] = '\"';
+                        int value_length = itor->second->length - 1;
+                        memcpy(&buf[++length], itor->second->buf, value_length);
+                        length += value_length - 1;
+                        buf[++length] = '\"';
+                    }
+                    else
+                    {
+                        int value_length = itor->second->length - 1;
+                        memcpy(&buf[++length], itor->second->buf, value_length);
+                        length += value_length - 1;
+                    }
+                }
+
+                size++;
+            }
+
+            buf[++length] = '}';
+        }
+        else
+        {
+            buf[++length] = '[';
+
+            // size 大于零则要添加逗号
+            int size = 0;
+            for (auto itor = this->List->begin(); itor != this->List->end(); itor++)
+            {
+                if (size > 0)
+                {
+                    buf[++length] = ',';
+                }
+
+                length += (*itor)->build(&buf[++length]);
+
+                size++;
+            }
+
+            buf[++length] = ']';
+        }
+
+        return length;
     }
 }
 
@@ -597,7 +668,14 @@ void JObject::Format(char *buf, int length)
 
 int JObject::Build(char *buf)
 {
-    return this->build(buf) + 1;
+    auto len = this->build(buf) + 1;
+
+    if (buf != nullptr)
+    {
+        buf[len] = '\0';
+    }
+
+    return len;
 }
 
 JObjectType JObject::GetType()
