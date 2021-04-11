@@ -60,6 +60,7 @@ enum class JObjectType
 class JObject
 {
 private:
+    char *buf = nullptr;
     int length = 0;
     JObjectType type = JObjectType::JObject;
 
@@ -73,7 +74,7 @@ private:
 
     void formatArray(char *buf, int length);
 
-    char *buf = nullptr;
+    int build(char *buf);
 
 public:
     std::map<char *, JObject *, cmp> *Data = nullptr;
@@ -165,4 +166,12 @@ public:
      * @return 是否获取成功
      */
     bool GetLength(char *key, int *buf);
+
+    /**
+     * @brief 获取数组中的元素
+     * @param index 索引
+     * @param buf 缓存
+     * @return 是否获取成功
+     */
+    bool At(int index, const JObject **buf);
 };

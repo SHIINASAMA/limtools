@@ -30,7 +30,7 @@ JObject::~JObject()
             delete itor->second;
         }
 
-	delete this->Data;
+        delete this->Data;
     }
     else if (this->type == JObjectType::Array)
     {
@@ -39,13 +39,8 @@ JObject::~JObject()
             delete *itor;
         }
 
-	delete this->List;
+        delete this->List;
     }
-}
-
-JObjectType JObject::GetType()
-{
-    return this->type;
 }
 
 void JObject::format(char *buf, int length)
@@ -528,6 +523,65 @@ int JObject::getFormLength(const char *buf)
     }
 }
 
+int JObject::build(char *buf)
+{
+    if (buf == nullptr)
+    {
+        int length = 0;
+
+        if (this->type == JObjectType::JObject)
+        {
+            // JObject
+            int size = this->Data->size();
+            //花括号数量
+            length += 2;
+            //逗号数量
+            length += size - 1;
+            //冒号和双引号数量
+            length += size * 3;
+
+            for (auto itor = this->Data->begin(); itor != this->Data->end(); itor++)
+            {
+                length += strlen(itor->first);
+
+                if (itor->second->type == JObjectType::JObject || itor->second->type == JObjectType::Array)
+                {
+                    length += itor->second->build(nullptr);
+                }
+                else
+                {
+                    if (itor->second->type == JObjectType::String)
+                    {
+                        length += itor->second->length + 1;
+                    }
+                    else
+                    {
+                        length += itor->second->length - 1;
+                    }
+                }
+            }
+        }
+        else
+        {
+            // Array
+            int size = this->List->size();
+            //中括号数量
+            length += 2;
+            //逗号数量
+            length += size - 1;
+
+            for (auto itor = this->List->begin(); itor != this->List->end(); itor++)
+            {
+                length += (*itor)->build(nullptr);
+            }
+        }
+        return length;
+    }
+    else
+    {
+    }
+}
+
 void JObject::Format(char *buf, int length)
 {
     this->buf = new char[length + 1];
@@ -543,7 +597,12 @@ void JObject::Format(char *buf, int length)
 
 int JObject::Build(char *buf)
 {
-    return 0;
+    return this->build(buf) + 1;
+}
+
+JObjectType JObject::GetType()
+{
+    return this->type;
 }
 
 int JObject::GetLength()
@@ -562,7 +621,6 @@ bool JObject::GetBool(char *key, bool *buf)
             {
                 return false;
             }
-
 
             if (itor->first[0] == 't')
             {
@@ -698,6 +756,26 @@ bool JObject::GetLength(char *key, int *buf)
         else
         {
             return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool JObject::At(int index, const JObject **buf)
+{
+    if (this->List != nullptr)
+    {
+        if (index < 0 || index > this->List->size() - 1)
+        {
+            return false;
+        }
+        else
+        {
+            *buf = this->List->at(index);
+            return true;
         }
     }
     else
