@@ -6,6 +6,7 @@
   - 文件类 - **File class**
   - 控制台类 - **Console class**
   - Config配置文件类 **ConfigReader class & ConfigWriter class**
+  - Json对象类 **JObject class**
   - IO类（在Windows平台处理句柄）**IO class**
 - 网络相关类
   - 广播类 - **Broadcast class**
