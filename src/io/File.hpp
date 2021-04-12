@@ -13,7 +13,9 @@
 #define _FILE_HPP_
 
 #ifdef _WIN32
+
 #include <Windows.h>
+
 #define ID HANDLE
 #elif __linux__
 #include <sys/types.h>
@@ -138,7 +140,7 @@ public:
      * 
      */
     virtual ~File();
-    
+
     /**
      * @brief 打开一个文件
      * 
@@ -190,10 +192,24 @@ public:
     void MoveOffset(long pos);
 
     /**
+     * @brief 获取当前位置
+     *
+     * @return Offset
+     */
+    long GetOffset();
+
+    /**
      * @brief 关闭当前连接
      * 
      */
     void Close();
+
+    /**
+     * @brief 获取文件长度
+     *
+     * @return 文件长度
+     */
+    long GetFileLength();
 };
 
 #endif

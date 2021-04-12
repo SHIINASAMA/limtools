@@ -52,7 +52,7 @@ bool File::Open(const char *path, AccessMode accessMode, OpenMode openMode)
         l = GENERIC_WRITE | GENERIC_READ;
     }
 
-    ID temp = CreateFile(path, l, NULL, NULL, (DWORD)openMode, FILE_ATTRIBUTE_NORMAL, NULL);
+    ID temp = CreateFile(path, l, NULL, NULL, (DWORD) openMode, FILE_ATTRIBUTE_NORMAL, NULL);
     if (temp != INVALID_HANDLE_VALUE)
     {
         this->id = temp;
@@ -70,7 +70,7 @@ bool File::Open(const char *path, AccessMode accessMode, OpenMode openMode)
 
     if (openMode == OpenMode::NEW)
     {
-        int temp = open(path, (int)accessMode | (int)openMode, S_IRWXU);
+        int temp = open(path, (int) accessMode | (int) openMode, S_IRWXU);
         if (temp != -1)
         {
             this->id = temp;
@@ -85,7 +85,7 @@ bool File::Open(const char *path, AccessMode accessMode, OpenMode openMode)
     {
         if (access(path, F_OK) == 0)
         {
-            int temp = open(path, (int)accessMode | O_TRUNC, S_IRWXU);
+            int temp = open(path, (int) accessMode | O_TRUNC, S_IRWXU);
             if (temp != -1)
             {
                 this->id = temp;
@@ -98,7 +98,7 @@ bool File::Open(const char *path, AccessMode accessMode, OpenMode openMode)
         }
         else
         {
-            int temp = open(path, (int)accessMode | O_CREAT, S_IRWXU);
+            int temp = open(path, (int) accessMode | O_CREAT, S_IRWXU);
             if (temp != -1)
             {
                 this->id = temp;
@@ -114,7 +114,7 @@ bool File::Open(const char *path, AccessMode accessMode, OpenMode openMode)
     {
         if (access(path, F_OK) == 0)
         {
-            int temp = open(path, (int)accessMode, S_IRWXU);
+            int temp = open(path, (int) accessMode, S_IRWXU);
             if (temp != -1)
             {
                 this->id = temp;
@@ -139,7 +139,7 @@ int File::Write(void *buf, int len)
     DWORD writtenLen;
     if (WriteFile(this->id, buf, len, &writtenLen, NULL))
     {
-        return (int)writtenLen;
+        return (int) writtenLen;
     }
     else
     {
@@ -156,7 +156,7 @@ int File::Read(void *buf, int len)
     DWORD readLen;
     if (ReadFile(this->id, buf, len, &readLen, NULL))
     {
-        return (int)readLen;
+        return (int) readLen;
     }
     else
     {
@@ -179,9 +179,9 @@ void File::SetOffset(long pos)
 void File::SetOffset(SeekPos pos)
 {
 #ifdef _WIN32
-    SetFilePointer(this->id, 0, 0, (DWORD)pos);
+    SetFilePointer(this->id, 0, 0, (DWORD) pos);
 #elif __linux__
-    lseek(this->id, 0, (int)pos);
+    lseek(this->id, 0, (int) pos);
 #endif
 }
 
@@ -194,6 +194,15 @@ void File::MoveOffset(long pos)
 #endif
 }
 
+long File::GetOffset()
+{
+#ifdef _WIN32
+    return SetFilePointer(this->id, 0, 0, FILE_CURRENT);
+#elif __linux__
+    return lseek(this->id, 0, SEEK_CUR);
+#endif
+}
+
 void File::Close()
 {
 #ifdef _WIN32
@@ -202,5 +211,20 @@ void File::Close()
 #elif __linux__
     close(this->id);
     this->id = -1;
+#endif
+}
+
+long File::GetFileLength()
+{
+#ifdef _WIN32
+    long pos = SetFilePointer(this->id, 0, 0, FILE_CURRENT);
+    long end = SetFilePointer(this->id, 0, 0, FILE_END);
+    SetFilePointer(this->id, pos, 0, FILE_BEGIN);
+    return end;
+#elif __linux__
+    long pos = lseek(this->id, 0, SEEK_CUR);
+    long end = lseek(this->id, 0, SEEK_SET);
+    lseek(this->id,pos,SEEK_CUR);
+    return end;
 #endif
 }
