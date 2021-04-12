@@ -60,10 +60,6 @@ enum class JObjectType
 class JObject
 {
 private:
-    char *buf = nullptr;
-    int length = 0;
-    JObjectType type = JObjectType::JObject;
-
     static bool isSpace(char ch);
 
     static void pretreatment(char *buf, int *length);
@@ -76,15 +72,42 @@ private:
 
     int build(char *buf);
 
+    bool set(const char *key, JObjectType type, const char *buf);
+
 public:
+
+    /**
+     * @brief 数据缓存
+     */
+    char *buf = nullptr;
+
+    /**
+     * 缓存大小（包括\0）
+     */
+    int length = 0;
+
+    /**
+     * 数据类型
+     */
+    JObjectType type = JObjectType::JObject;
+
+    /**
+     * @brief JObject 存值处
+     */
     std::map<char *, JObject *, cmp> *Data = nullptr;
 
+    /**
+     * @brief Array 存值处
+     */
     std::vector<JObject *> *List = nullptr;
+public:
 
     /**
      * @brief 构造函数
+     *
+     * @param type 数据类型，默认为 JObject
      */
-    JObject();
+    explicit JObject(JObjectType type = JObjectType::JObject);
 
     /**
      * @brief 销毁资源
@@ -174,4 +197,63 @@ public:
      * @return 是否获取成功
      */
     bool At(int index, const JObject **buf);
+
+    /**
+     * @brief 设置键对应的值的 bool 类型数据
+     * @param key 目标键
+     * @param buf 目标值
+     * @return 是否设置成功
+     */
+    bool SetBool(const char *key, bool buf);
+
+    /**
+     * @brief 设置键对应的值的 int 类型数据
+     * @param key 目标键
+     * @param buf 目标值
+     * @return 是否设置成功
+     */
+    bool SetInt(const char *key, int buf);
+
+    /**
+     * @brief 设置键对应的值的 double 类型数据
+     * @param key 目标键
+     * @param buf 目标值
+     * @return 是否设置成功
+     */
+    bool SetDouble(const char *key, double buf);
+
+    /**
+     * @brief 设置键对应的值的 char* 类型数据
+     * @param key 目标键
+     * @param buf 目标值
+     * @return 是否设置成功
+     */
+    bool SetString(const char *key, const char *buf);
+
+    /**
+     * @brief 设置键对应的值的为 null
+     * @param key 目标键
+     * @return 是否设置成功
+     */
+    bool SetNull(const char *key);
+
+    /**
+     * @brief 添加键为 key 的数组
+     * @param key 目标键
+     * @return 添加成功返回数组 JObject 对象的指针
+     */
+    JObject *SetList(const char *key);
+
+    /**
+     * @brief 添加键为 key 的 JObject
+     * @param key 目标键
+     * @return 添加成功返回 JObject 的 JObject 对象的指针
+     */
+    JObject *SetJObject(const char *key);
+
+    /**
+     * @brief 为数组 JObject 对象添加一个 JObject 的 JObject 对象指针
+     * @return 添加成功返回 JObject 的 JObject 对象的指针
+     */
+    JObject *SetObject();
 };

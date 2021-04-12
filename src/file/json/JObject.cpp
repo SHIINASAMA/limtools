@@ -11,8 +11,70 @@
 
 #include "JObject.hpp"
 
-JObject::JObject()
+JObject::JObject(JObjectType type)
 {
+    if (type == JObjectType::JObject)
+    {
+        this->Data = new std::map<char *, JObject *, cmp>();
+    }
+    else if (type == JObjectType::Array)
+    {
+        this->type = JObjectType::Array;
+        this->List = new std::vector<JObject *>();
+    }
+}
+
+bool JObject::set(const char *key, JObjectType type, const char *buf)
+{
+    if (this->Data == nullptr)
+    {
+        return false;
+    }
+
+    char *temp_key = new char[strlen(key) + 1];
+    strcpy(temp_key, key);
+    JObject *obj = new JObject(JObjectType::Null);
+    auto pair = this->Data->insert(std::make_pair(temp_key, obj));
+
+    if (pair.second == true)
+    {
+        // 插入成功
+        int buf_length = strlen(buf);
+        obj->buf = new char[buf_length + 1];
+        strcpy(obj->buf, buf);
+        obj->buf[buf_length] = '\0';
+        obj->length = buf_length + 1;
+        obj->type = type;
+        delete obj->Data;
+        obj->Data = nullptr;
+        return true;
+    }
+    else
+    {
+        // 插入失败
+        delete obj;
+        auto itor = this->Data->find(temp_key);
+        obj = itor->second;
+
+        //不允许覆盖对象类型为 JObject 和 Array 的数据
+        if (obj->type == JObjectType::JObject || obj->type == JObjectType::Array)
+        {
+            delete[] temp_key;
+            return false;
+        }
+
+        int buf_length = strlen(buf);
+        obj->buf = new char[buf_length + 1];
+        strcpy(obj->buf, buf);
+        obj->buf[buf_length] = '\0';
+        obj->length = buf_length + 1;
+        obj->type = type;
+        delete obj->Data;
+        obj->Data = nullptr;
+        return true;
+
+    }
+
 }
 
 JObject::~JObject()
@@ -533,8 +595,15 @@ int JObject::build(char *buf)
         {
             // JObject
             int size = this->Data->size();
+
             //花括号数量
             length += 2;
+
+            if (size == 0)
+            {
+                goto end;
+            }
+
             //逗号数量
             length += size - 1;
             //冒号和双引号数量
@@ -567,6 +636,12 @@ int JObject::build(char *buf)
             int size = this->List->size();
             //中括号数量
             length += 2;
+
+            if (size == 0)
+            {
+                goto end;
+            }
+
             //逗号数量
             length += size - 1;
 
@@ -575,6 +650,7 @@ int JObject::build(char *buf)
                 length += (*itor)->build(nullptr);
             }
         }
+        end:
         return length;
     }
     else
@@ -658,8 +734,6 @@ void JObject::Format(char *buf, int length)
     this->buf = new char[length + 1];
     memcpy(this->buf, buf, length + 1);
     this->buf[length] = '\0';
-
-    this->Data = new std::map<char *, JObject *, cmp>();
 
     pretreatment(this->buf, &length);
     this->length = length;
@@ -860,4 +934,104 @@ bool JObject::At(int index, const JObject **buf)
     {
         return false;
     }
+}
+
+bool JObject::SetBool(const char *key, bool buf)
+{
+    if (buf == true)
+    {
+        return this->set(key, JObjectType::Bool, "true");
+    }
+    else
+    {
+        return this->set(key, JObjectType::Bool, "false");
+    }
+}
+
+bool JObject::SetInt(const char *key, int buf)
+{
+    char num[16]{0};
+    sprintf(num, "%d", buf);
+    return this->set(key, JObjectType::Number, num);
+}
+
+bool JObject::SetDouble(const char *key, double buf)
+{
+    char num[32]{0};
+    sprintf(num, "%lf", buf);
+    return this->set(key, JObjectType::Number, num);
+}
+
+bool JObject::SetString(const char *key, const char *buf)
+{
+    return this->set(key, JObjectType::String, buf);
+}
+
+bool JObject::SetNull(const char *key)
+{
+    return this->set(key, JObjectType::Null, "null");
+}
+
+JObject *JObject::SetList(const char *key)
+{
+    if (this->Data == nullptr)
+    {
+        return nullptr;
+    }
+
+    int key_length = strlen(key);
+    char *temp_key = new char[key_length + 1];
+    strcpy(temp_key, key);
+    temp_key[key_length] = '\0';
+    JObject *obj = new JObject(JObjectType::Array);
+    auto pair = this->Data->insert(std::make_pair(temp_key, obj));
+
+    if (pair.second == true)
+    {
+        return obj;
+    }
+    else
+    {
+        delete[] temp_key;
+        delete obj;
+        return nullptr;
+    }
+}
+
+JObject *JObject::SetJObject(const char *key)
+{
+    if (this->Data == nullptr)
+    {
+        return nullptr;
+    }
+
+    int key_length = strlen(key);
+    char *temp_key = new char[key_length + 1];
+    strcpy(temp_key, key);
+    temp_key[key_length] = '\0';
+    JObject *obj = new JObject(JObjectType::JObject);
+    auto pair = this->Data->insert(std::make_pair(temp_key, obj));
+
+    if (pair.second == true)
+    {
+        return obj;
+    }
+    else
+    {
+        delete[] temp_key;
+        delete obj;
+        return nullptr;
+    }
+}
+
+JObject *JObject::SetObject()
+{
+    if (this->List == nullptr)
+    {
+        return nullptr;
+    }
+
+    JObject *obj = new JObject();
+    this->List->push_back(obj);
+    return obj;
 }
