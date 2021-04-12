@@ -13,6 +13,9 @@ aux_source_directory(./thread DIR_THREAD_SRCS)
 # Config文件相关
 aux_source_directory(./file/config DIR_CONFIG_SRCS)
 
+# Json文件相关
+aux_source_directory(./file/json DIR_JSON_SRCS)
+
 add_library(
     limtools
     ${DIR_IO_SRCS}
@@ -20,4 +23,5 @@ add_library(
     ${DIR_HTTP_SRCS}
     ${DIR_THREAD_SRCS}
     ${DIR_CONFIG_SRCS}
+    ${DIR_JSON_SRCS}
 )
