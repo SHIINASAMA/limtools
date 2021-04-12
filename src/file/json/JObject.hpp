@@ -74,7 +74,7 @@ private:
 
     bool set(const char *key, JObjectType type, const char *buf);
 
-public:
+private:
 
     /**
      * @brief 数据缓存
@@ -256,4 +256,31 @@ public:
      * @return 添加成功返回 JObject 的 JObject 对象的指针
      */
     JObject *SetObject();
+
+    /**
+     * @brief 移除数组下标为 index 的元素
+     * @param index 索引值
+     * @return 是否删除成功
+     */
+    bool Remove(int index);
+
+    /**
+     * @brief 移除键为 key 的元素
+     * @param key 目标键
+     * @return 是否删除成功
+     */
+    bool Remove(const char *key);
+
+    /**
+     * @brief 获取 JObject 或者 Array 中元素的个数
+     * @return 元素的个数
+     */
+    int GetSize();
+
+    /**
+     * @brief 查找改键是否存在
+     * @param key 目标键
+     * @return 查找成功返回 true，不存在或查找失败返回 false
+     */
+    bool Find(const char *key);
 };

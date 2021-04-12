@@ -3,29 +3,13 @@
 
 int main()
 {
-//    char *content = "{\n"
-//                    "  \"t\": true,\n"
-//                    "  \"f\": false,\n"
-//                    "  \"n\": null,\n"
-//                    "  \"me\": [\n"
-//                    "    {\n"
-//                    "      \"A\": 10\n"
-//                    "    }\n"
-//                    "  ],\n"
-//                    "  \"name\": \"kaoru\",\n"
-//                    "  \"body\": {\n"
-//                    "    \"age\": 10\n"
-//                    "  }\n"
-//                    "}";
-
     JObject *obj = new JObject();
-    //obj->Format(content, strlen(content));
-
     obj->SetBool("false",false);
     obj->SetBool("true", true);
     obj->SetInt("int", 18);
     obj->SetDouble("double", 10.0);
     obj->SetNull("null");
+    obj->Remove("false");
     auto list = obj->SetList("list");
 
     JObject *temp;
@@ -35,6 +19,10 @@ int main()
     temp = list->SetObject();
     temp->SetString("name","kaori");
     temp->SetInt("age",19);
+    temp = list->SetObject();
+    temp->SetString("name","shiina");
+    temp->SetInt("age",18);
+    list->Remove(2);
 
     int len = obj->Build(nullptr);
     char *buf = new char[len];

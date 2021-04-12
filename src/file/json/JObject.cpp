@@ -485,13 +485,48 @@ void JObject::pretreatment(char *buf, int *length)
             continue;
         }
 
-        //直接照搬并跳过转义字符
+        //解析转义字符
         if (buf[pos] == '\\')
         {
-            buf[pos - space_num] = buf[pos];
-            buf[pos - space_num + 1] = buf[pos + 1];
+//            buf[pos - space_num] = buf[pos];
+//            buf[pos - space_num + 1] = buf[pos + 1];
+//            pos += 1;
+//            continue;
+            char ch;
+            switch (buf[pos + 1])
+            {
+                case '\"':
+                    ch = '\"';
+                    space_num++;
+                    break;
+                case '\'':
+                    ch = '\'';
+                    space_num++;
+                    break;
+                case '\\':
+                    ch = '\\';
+                    space_num++;
+                    break;
+                case 'r':
+                    ch = '\r';
+                    space_num++;
+                    break;
+                case 'n':
+                    ch = '\n';
+                    space_num++;
+                    break;
+                case 't':
+                    ch = '\t';
+                    space_num++;
+                    break;
+                default:
+                    ch = '?';
+                    space_num++;
+                    break;
+            }
+
+            buf[pos - space_num] = ch;
             pos += 1;
-            continue;
         }
 
         //使 space_num 自增并移除空白
@@ -1034,4 +1069,90 @@ JObject *JObject::SetObject()
     JObject *obj = new JObject();
     this->List->push_back(obj);
     return obj;
+}
+
+bool JObject::Remove(int index)
+{
+    if (this->List != nullptr)
+    {
+        if (index < 0 || index > this->List->size() - 1)
+        {
+            return false;
+        }
+        else
+        {
+            auto itor = this->List->begin();
+            for (int i = 0; i < index; i++, itor++);
+            JObject *free_object = *itor;
+            this->List->erase(itor);
+            delete free_object;
+            return true;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool JObject::Remove(const char *key)
+{
+    if (this->Data == nullptr)
+    {
+        return false;
+    }
+
+    auto itor = this->Data->find(const_cast<char *>(key));
+    if (itor != this->Data->end())
+    {
+        char *free_string = itor->first;
+        JObject *free_object = itor->second;
+        this->Data->erase(itor);
+        delete[] free_string;
+        delete free_object;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+int JObject::GetSize()
+{
+    if (this->Data == nullptr)
+    {
+        return -1;
+    }
+
+    if (this->type == JObjectType::JObject)
+    {
+        return this->Data->size();
+    }
+    else if (this->type == JObjectType::Array)
+    {
+        return this->List->size();
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+bool JObject::Find(const char *key)
+{
+    if (this->Data == nullptr)
+    {
+        return false;
+    }
+
+    auto itor = this->Data->find(const_cast<char *>(key));
+    if (itor != this->Data->end())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
