@@ -11,6 +11,9 @@
 
 #include "JObject.hpp"
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
+
 JObject::JObject(JObjectType type)
 {
     if (type == JObjectType::JObject)
@@ -114,13 +117,6 @@ void JObject::format(char *buf, int length)
     char *key = nullptr;
     for (int i = 0; i < length; i++)
     {
-        //转义符号直接跳过
-        if (buf[i] == '\\')
-        {
-            i++;
-            continue;
-        }
-
         if (buf[i] == '\"')
         {
             if (quotes_num % 2 == 0)
@@ -189,16 +185,16 @@ void JObject::format(char *buf, int length)
                 else if (buf[j] == '{')
                 {
                     //JObject
-                    auto child = new JObject();
-                    child->type = JObjectType::JObject;
-                    child->Data = new std::map<char *, JObject *, cmp>();
+                    auto child = new JObject(JObjectType::JObject);
 
                     int value_length = getFormLength(&buf[j]);
-                    child->buf = new char[value_length + 2];
-                    memcpy(child->buf, &buf[j + 1], value_length + 1);
-                    child->buf[value_length + 1] = '\0';
-
-                    child->format(child->buf, value_length + 1);
+                    if (value_length != 0)
+                    {
+                        child->buf = new char[value_length + 2];
+                        memcpy(child->buf, &buf[j + 1], value_length + 1);
+                        child->buf[value_length + 1] = '\0';
+                        child->format(child->buf, value_length + 1);
+                    }
 
                     this->Data->insert(std::make_pair(key, child));
                     key = nullptr;
@@ -210,19 +206,18 @@ void JObject::format(char *buf, int length)
                 else if (buf[j] == '[')
                 {
                     //Array
-                    auto child = new JObject();
-                    child->type = JObjectType::Array;
-                    child->List = new std::vector<JObject *>();
+                    auto child = new JObject(JObjectType::Array);
 
                     int value_length = getFormLength(&buf[j]);
-                    child->buf = new char[value_length + 1];
-                    memcpy(child->buf, &buf[j + 1], value_length);
-                    child->buf[value_length] = '\0';
-
-                    child->formatArray(child->buf, value_length);
+                    if (value_length != 0)
+                    {
+                        child->buf = new char[value_length + 1];
+                        memcpy(child->buf, &buf[j + 1], value_length);
+                        child->buf[value_length] = '\0';
+                        child->formatArray(child->buf, value_length);
+                    }
 
                     this->Data->insert(std::make_pair(key, child));
-
                     key = nullptr;
                     start_pos = -1;
                     medium_pos = -1;
@@ -786,6 +781,7 @@ int JObject::Build(char *buf)
 
     return len;
 }
+#pragma clang diagnostic pop
 
 JObjectType JObject::GetType()
 {
@@ -843,7 +839,9 @@ bool JObject::GetInt(char *key, int *buf)
             }
 
 
-            sscanf(itor->second->buf, "%d", buf);
+            //sscanf(itor->second->buf, "%d", buf);
+            //*buf = strtol(itor->second->buf, nullptr, 10);
+            *buf = atol(itor->second->buf);
             return true;
         }
         else
@@ -1156,3 +1154,4 @@ bool JObject::Find(const char *key)
         return false;
     }
 }
+#pragma clang diagnostic pop
