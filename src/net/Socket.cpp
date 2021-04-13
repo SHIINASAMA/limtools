@@ -114,7 +114,7 @@ int Socket::GetHostByName(char *buf[], int size, const char *domain)
     {
         if (count < size)
         {
-            in_addr in;
+            in_addr in{};
             in.S_un.S_addr = *(u_long *)pt;
             buf[count] = inet_ntoa(in);
         }
