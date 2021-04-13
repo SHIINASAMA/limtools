@@ -54,11 +54,7 @@ enum class ShutdownMode
 };
 
 #ifdef _WIN32
-// #define _WIN32_WINNT 0x0600
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-#pragma comment(lib, "ws2_32.lib")
+#include "SocketManager.hpp"
 
 /**
  * @brief 套接字类
@@ -67,8 +63,7 @@ enum class ShutdownMode
 class Socket
 {
 private:
-    static int count;
-    static int startup();
+    static SocketManager* manager;
 
 protected:
     SOCKET sock;
@@ -87,7 +82,7 @@ public:
 
     /**
      * @brief 销毁套接字
-     * 
+     *
      */
     ~Socket();
 
@@ -170,7 +165,16 @@ protected:
     sockaddr_in sin{0};
 
 public:
+    /**
+     * @brief 初始化套接字
+     */
     Socket();
+
+    /**
+     * @brief 销毁套接字
+     *
+     */
+    ~Socket();
 
     /**
      * @brief 初始化套接字

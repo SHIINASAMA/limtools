@@ -12,31 +12,15 @@
 #include "Socket.hpp"
 
 #ifdef _WIN32
-int Socket::count = 0;
 
-int Socket::startup()
-{
-    WSADATA wsaData;
-    return WSAStartup(MAKEWORD(2, 2), &wsaData);
-}
+SocketManager* Socket::manager = new SocketManager();
 
 Socket::Socket()
 {
-    if (Socket::count == 0 && Socket::startup() != 0)
-    {
-        return;
-    }
-    Socket::count++;
 }
 
 Socket::Socket(SocketMode mode, const char *ipaddr, unsigned short port)
 {
-    if (Socket::count == 0 && Socket::startup() != 0)
-    {
-        return;
-    }
-    Socket::count++;
-
     this->sock = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     this->sin.sin_family = AF_INET;
     this->sin.sin_addr.s_addr = inet_addr(ipaddr);
@@ -44,7 +28,7 @@ Socket::Socket(SocketMode mode, const char *ipaddr, unsigned short port)
 
     if (mode == SocketMode::Server)
     {
-        bind(this->sock, (SOCKADDR *)&this->sin, sizeof(SOCKADDR));
+        bind(this->sock, (SOCKADDR *) &this->sin, sizeof(SOCKADDR));
     }
 }
 
@@ -55,10 +39,7 @@ int Socket::Listen(int backlog)
 
 Socket::~Socket()
 {
-    if (Socket::count == 0)
-    {
-        WSACleanup();
-    }
+    this->Close();
 }
 
 int Socket::Read(char *buffer, int size)
@@ -75,23 +56,22 @@ Socket Socket::Accept()
 {
     Socket res;
     int len = sizeof(SOCKADDR);
-    res.sock = accept(this->sock, (SOCKADDR *)&res.sin, &len);
+    res.sock = accept(this->sock, (SOCKADDR *) &res.sin, &len);
     return res;
 }
 
 int Socket::Connect()
 {
-    return connect(this->sock, (SOCKADDR *)&this->sin, sizeof(SOCKADDR));
+    return connect(this->sock, (SOCKADDR *) &this->sin, sizeof(SOCKADDR));
 }
 
 int Socket::Shutdown(ShutdownMode mode)
 {
-    return shutdown(this->sock, (int)mode);
+    return shutdown(this->sock, (int) mode);
 }
 
 int Socket::Close()
 {
-    Socket::count--;
     return closesocket(this->sock);
 }
 
@@ -115,7 +95,7 @@ int Socket::GetHostByName(char *buf[], int size, const char *domain)
         if (count < size)
         {
             in_addr in{};
-            in.S_un.S_addr = *(u_long *)pt;
+            in.S_un.S_addr = *(u_long *) pt;
             buf[count] = inet_ntoa(in);
         }
         else
@@ -126,6 +106,7 @@ int Socket::GetHostByName(char *buf[], int size, const char *domain)
 
     return count;
 }
+
 #endif
 
 #ifdef __linux__
@@ -144,6 +125,11 @@ Socket::Socket(SocketMode mode,const char *ipaddr, unsigned short port)
     {
         bind(this->sock, (sockaddr *)&this->sin, sizeof(sockaddr));
     }
+}
+
+Socket::~Socket()
+{
+    this->Close();
 }
 
 Socket Socket::Accept()

@@ -153,6 +153,11 @@ public:
      */
     static void ClearColor();
 
+    /**
+     * @brief 彩色输出
+     * @param str 目标字符串
+     * @param fontColor 前景色
+     */
     static void WriteColorful(const char *str, Colors fontColor);
 
     /**

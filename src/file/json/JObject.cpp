@@ -709,7 +709,8 @@ int JObject::build(char *buf)
 
                 if (itor->second->type == JObjectType::JObject || itor->second->type == JObjectType::Array)
                 {
-                    length += itor->second->build(&buf[++length]);
+                    length++;
+                    length += itor->second->build(&buf[length]);
                 }
                 else
                 {
@@ -717,7 +718,8 @@ int JObject::build(char *buf)
                     {
                         buf[++length] = '\"';
                         int value_length = itor->second->length - 1;
-                        memcpy(&buf[++length], itor->second->buf, value_length);
+                        length++;
+                        memcpy(&buf[length], itor->second->buf, value_length);
                         length += value_length - 1;
                         buf[++length] = '\"';
                     }
@@ -747,12 +749,14 @@ int JObject::build(char *buf)
                     buf[++length] = ',';
                 }
 
-                length += (*itor)->build(&buf[++length]);
+                length++;
+                length += (*itor)->build(&buf[length]);
 
                 size++;
             }
 
-            buf[++length] = ']';
+            length++;
+            buf[length] = ']';
         }
 
         return length;
@@ -1154,4 +1158,3 @@ bool JObject::Find(const char *key)
         return false;
     }
 }
-#pragma clang diagnostic pop
