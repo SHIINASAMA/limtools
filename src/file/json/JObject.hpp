@@ -120,7 +120,7 @@ public:
      * @param buf 目标缓存
      * @param length 缓存大小
      */
-    void Format(char *buf, int length);
+    void Format(const char *buf, int length);
 
     /**
      * @brief 构建 Json

@@ -135,6 +135,10 @@ void JObject::format(char *buf, int length)
                     medium_pos = i;
 
                     int key_length = medium_pos - start_pos;
+                    if (key_length == 0)
+                    {
+                        goto end;
+                    }
                     key = new char[key_length];
                     memcpy(key, &buf[start_pos + 1], key_length - 1);
                     key[key_length - 1] = '\0';
@@ -763,7 +767,7 @@ int JObject::build(char *buf)
     }
 }
 
-void JObject::Format(char *buf, int length)
+void JObject::Format(const char *buf, int length)
 {
     this->buf = new char[length + 1];
     memcpy(this->buf, buf, length + 1);
@@ -785,6 +789,7 @@ int JObject::Build(char *buf)
 
     return len;
 }
+
 #pragma clang diagnostic pop
 
 JObjectType JObject::GetType()

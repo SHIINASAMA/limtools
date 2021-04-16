@@ -71,7 +71,7 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
     // {
     //     if (*fmt == '%')
     //     {
-    //         fmt++;
+    //         fmt++;ws
     //         switch (*fmt)
     //         {
     //         case '%':

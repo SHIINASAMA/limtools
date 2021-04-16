@@ -11,6 +11,8 @@
 
 #include "SocketManager.hpp"
 
+#ifdef _WIN32
+
 int SocketManager::StatusCode = -1;
 
 SocketManager::SocketManager()
@@ -34,3 +36,4 @@ SocketManager::~SocketManager()
     StatusCode = 0;
 }
 
+#endif
