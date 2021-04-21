@@ -21,8 +21,7 @@
  * @brief 请求类
  * 
  */
-class Request
-{
+class Request {
 private:
     std::string Args;
     Response *response = nullptr;

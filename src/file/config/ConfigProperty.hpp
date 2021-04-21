@@ -19,10 +19,8 @@
 /**
  * @brief 用于在std::map中提供char*之间的比较方式 
  */
-struct cmp
-{
-    bool operator()(const char *pc1, const char *pc2) const
-    {
+struct cmp {
+    bool operator()(const char *pc1, const char *pc2) const {
         return strcmp(pc1, pc2) < 0;
     }
 };
@@ -31,8 +29,7 @@ struct cmp
  * @brief 属性类
  * 
  */
-class ConfigProperty
-{
+class ConfigProperty {
 public:
     char Name[NAME_LEN]{0};
     char Value[VALUE_LEN]{0};

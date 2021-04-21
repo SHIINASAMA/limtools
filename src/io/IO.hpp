@@ -13,14 +13,14 @@
 #define _IO_HPP_
 
 #ifdef _WIN32
+
 #include <Windows.h>
 
 /**
  * @brief IO句柄管理类
  * 
  */
-class IO
-{
+class IO {
 
 private:
     HANDLE inputHandle;
@@ -31,6 +31,7 @@ private:
     IO();
 
     ~IO();
+
 public:
     /**
      * @brief 获取输入句柄
@@ -46,6 +47,7 @@ public:
      */
     static HANDLE GetOutputHandle();
 };
+
 #endif
 
 #endif

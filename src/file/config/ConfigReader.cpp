@@ -11,11 +11,9 @@
 
 #include "ConfigReader.hpp"
 
-bool ConfigReader::Read(char *path, std::map<char *, char *, cmp> *propertyMap)
-{
+bool ConfigReader::Read(char *path, std::map<char *, char *, cmp> *propertyMap) {
     File file;
-    if (!file.Open(path, AccessMode::READ, OpenMode::OPEN))
-    {
+    if (!file.Open(path, AccessMode::READ, OpenMode::OPEN)) {
         return false;
     }
 
@@ -24,23 +22,18 @@ bool ConfigReader::Read(char *path, std::map<char *, char *, cmp> *propertyMap)
     int enterPos = 0;
     int len = 0;
 
-    while (1)
-    {
+    while (1) {
         len = file.Read(buf, 130);
-        if (!len)
-        {
+        if (!len) {
             break;
         }
-        for (int pos = 0; pos < len; pos++)
-        {
-            if (buf[pos] == '=')
-            {
+        for (int pos = 0; pos < len; pos++) {
+            if (buf[pos] == '=') {
                 equalPos = pos;
                 continue;
             }
 
-            if (buf[pos] == '\n')
-            {
+            if (buf[pos] == '\n') {
                 enterPos = pos;
                 break;
             }
@@ -51,12 +44,10 @@ bool ConfigReader::Read(char *path, std::map<char *, char *, cmp> *propertyMap)
         memcpy(name, buf, equalPos);
         name[equalPos] = '\0';
         memcpy(value, &buf[equalPos + 1], len - equalPos);
-        if (enterPos == 0)
-        {
+        if (enterPos == 0) {
             value[len - equalPos - 1] = '\0';
         }
-        else
-        {
+        else {
             value[enterPos - equalPos - 1] = '\0';
         }
 
@@ -67,12 +58,10 @@ bool ConfigReader::Read(char *path, std::map<char *, char *, cmp> *propertyMap)
     return true;
 }
 
-void ConfigReader::FreeMap(std::map<char *, char *, cmp> *toFreeMap)
-{
-    for (auto i = toFreeMap->begin(); i != toFreeMap->end(); i++)
-    {
-        delete [] i->first;
-        delete [] i->second;
+void ConfigReader::FreeMap(std::map<char *, char *, cmp> *toFreeMap) {
+    for (auto i = toFreeMap->begin(); i != toFreeMap->end(); i++) {
+        delete[] i->first;
+        delete[] i->second;
     }
     toFreeMap->clear();
 }

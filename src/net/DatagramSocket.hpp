@@ -18,8 +18,7 @@
  * @brief UDP套接字
  * 
  */
-class DatagramSocket : Socket
-{
+class DatagramSocket : Socket {
 public:
     /**
      * @brief UDP套接字初始化
@@ -28,7 +27,7 @@ public:
      * @param ipaddr 目标IP
      * @param port 目标端口
      */
-    DatagramSocket(SocketMode mode,const char *ipaddr, unsigned short port);
+    DatagramSocket(SocketMode mode, const char *ipaddr, unsigned short port);
 
     /**
      * @brief 写入数据

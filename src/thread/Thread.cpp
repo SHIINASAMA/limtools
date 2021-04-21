@@ -11,37 +11,29 @@
 
 #include "Thread.hpp"
 
-Thread::Thread()
-{
+Thread::Thread() {
 }
 
-Thread::~Thread()
-{
-    if (this->worker.joinable())
-    {
+Thread::~Thread() {
+    if (this->worker.joinable()) {
         this->worker.join();
     }
 }
 
-void Thread::Start()
-{
+void Thread::Start() {
     this->worker = std::thread(std::bind(&Thread::Run, this));
 }
 
-std::thread::id Thread::GetId()
-{
+std::thread::id Thread::GetId() {
     return this->worker.get_id();
 }
 
-void Thread::Join()
-{
-    if (this->worker.joinable())
-    {
+void Thread::Join() {
+    if (this->worker.joinable()) {
         this->worker.join();
     }
 }
 
-void Thread::Detach()
-{
+void Thread::Detach() {
     this->worker.detach();
 }

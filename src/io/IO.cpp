@@ -9,29 +9,27 @@
  * 
  */
 #ifdef _WIN32
+
 #include "IO.hpp"
 
 IO *IO::io = new IO();
 
-IO::IO()
-{
+IO::IO() {
     this->inputHandle = GetStdHandle(STD_INPUT_HANDLE);
     this->outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
-IO::~IO()
-{
+IO::~IO() {
     CloseHandle(this->inputHandle);
     CloseHandle(this->outputHandle);
 }
 
-HANDLE IO::GetInputHandle()
-{
+HANDLE IO::GetInputHandle() {
     return io->inputHandle;
 }
 
-HANDLE IO::GetOutputHandle()
-{
+HANDLE IO::GetOutputHandle() {
     return io->outputHandle;
 }
+
 #endif

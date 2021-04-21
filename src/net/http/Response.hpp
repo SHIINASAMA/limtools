@@ -19,10 +19,8 @@
  * @brief 忽略字符串大小写的比较函数
  * 
  */
-struct ucmp
-{
-    bool operator()(const char *pc1, const char *pc2) const
-    {
+struct ucmp {
+    bool operator()(const char *pc1, const char *pc2) const {
 #ifdef _WIN32
         return _stricmp(pc1, pc2) < 0;
 #elif __linux__
@@ -35,8 +33,7 @@ struct ucmp
  * @brief 响应类
  * 
  */
-class Response
-{
+class Response {
 public:
     /**
      * @brief 初始化一个响应对象

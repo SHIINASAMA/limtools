@@ -55,8 +55,7 @@ char *ltoa(long value, char *string, int radix)
 }
 #endif
 
-void Console::Print(const char *str)
-{
+void Console::Print(const char *str) {
 #ifdef _WIN32
     DWORD len;
     WriteConsole(IO::GetOutputHandle(), str, strlen(str), &len, NULL);
@@ -65,8 +64,7 @@ void Console::Print(const char *str)
 #endif
 }
 
-void Console::FormatWrite(char *buf, const char *fmt, va_list args)
-{
+void Console::FormatWrite(char *buf, const char *fmt, va_list args) {
     // while (*fmt)
     // {
     //     if (*fmt == '%')
@@ -167,132 +165,120 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
     const char *header = fmt;
     char *nbuf = buf;
     int len = 0;
-    while (*header)
-    {
-        if (*header != '%')
-        {
+    while (*header) {
+        if (*header != '%') {
             len++;
             header++;
         }
-        else if (*header)
-        {
+        else if (*header) {
             memcpy(nbuf, fmt, len);
             nbuf += len;
             fmt += len + 1;
             len = 0;
-            switch (*fmt)
-            {
-            case '%':
-            {
-                *nbuf = '%';
-                nbuf++;
-                fmt++;
-                header += 2;
-                break;
-            }
-            case 'b':
-            {
-                char temp[33];
-                long l = va_arg(args, long);
-                ltoa(l, temp, 2);
-                int len = strlen(temp);
+            switch (*fmt) {
+                case '%': {
+                    *nbuf = '%';
+                    nbuf++;
+                    fmt++;
+                    header += 2;
+                    break;
+                }
+                case 'b': {
+                    char temp[33];
+                    long l = va_arg(args, long);
+                    ltoa(l, temp, 2);
+                    int len = strlen(temp);
 #ifdef _WIN32
-                strcpy_s(nbuf, strlen(temp) + 1, temp);
+                    strcpy_s(nbuf, strlen(temp) + 1, temp);
 #elif __linux__
-                strcpy(nbuf, temp);
+                    strcpy(nbuf, temp);
 #endif
-                nbuf += len;
-                fmt++;
-                header += 2;
-                break;
-            }
-            case 'o':
-            {
-                char temp[33];
-                long l = va_arg(args, long);
-                ltoa(l, temp, 8);
-                int len = strlen(temp);
+                    nbuf += len;
+                    fmt++;
+                    header += 2;
+                    break;
+                }
+                case 'o': {
+                    char temp[33];
+                    long l = va_arg(args, long);
+                    ltoa(l, temp, 8);
+                    int len = strlen(temp);
 #ifdef _WIN32
-                strcpy_s(nbuf, strlen(temp) + 1, temp);
+                    strcpy_s(nbuf, strlen(temp) + 1, temp);
 #elif __linux__
-                strcpy(nbuf, temp);
+                    strcpy(nbuf, temp);
 #endif
-                nbuf += len;
-                fmt++;
-                header += 2;
-                break;
-            }
-            case 'd':
-            {
-                char temp[33];
-                long l = va_arg(args, long);
-                ltoa(l, temp, 10);
-                int len = strlen(temp);
+                    nbuf += len;
+                    fmt++;
+                    header += 2;
+                    break;
+                }
+                case 'd': {
+                    char temp[33];
+                    long l = va_arg(args, long);
+                    ltoa(l, temp, 10);
+                    int len = strlen(temp);
 #ifdef _WIN32
-                strcpy_s(nbuf, strlen(temp) + 1, temp);
+                    strcpy_s(nbuf, strlen(temp) + 1, temp);
 #elif __linux__
-                strcpy(nbuf, temp);
+                    strcpy(nbuf, temp);
 #endif
-                nbuf += len;
-                fmt++;
-                header += 2;
-                break;
-            }
-            case 'x':
-            {
-                char temp[33];
-                long l = va_arg(args, long);
-                ltoa(l, temp, 16);
-                int len = strlen(temp);
+                    nbuf += len;
+                    fmt++;
+                    header += 2;
+                    break;
+                }
+                case 'x': {
+                    char temp[33];
+                    long l = va_arg(args, long);
+                    ltoa(l, temp, 16);
+                    int len = strlen(temp);
 #ifdef _WIN32
-                strcpy_s(nbuf, strlen(temp) + 1, temp);
+                    strcpy_s(nbuf, strlen(temp) + 1, temp);
 #elif __linux__
-                strcpy(nbuf, temp);
+                    strcpy(nbuf, temp);
 #endif
-                nbuf += len;
-                fmt++;
-                header += 2;
-                break;
-            }
-            case 'f':
-            {
-                char temp[33];
-                double d = va_arg(args, double);
-                sprintf(temp, "%lf", d);
-                int len = strlen(temp);
+                    nbuf += len;
+                    fmt++;
+                    header += 2;
+                    break;
+                }
+                case 'f': {
+                    char temp[33];
+                    double d = va_arg(args, double);
+                    sprintf(temp, "%lf", d);
+                    int len = strlen(temp);
 #ifdef _WIN32
-                strcpy_s(nbuf, strlen(temp) + 1, temp);
+                    strcpy_s(nbuf, strlen(temp) + 1, temp);
 #elif __linux__
-                strcpy(nbuf, temp);
+                    strcpy(nbuf, temp);
 #endif
-                nbuf += len;
-                fmt++;
-                header += 2;
-                break;
-            }
-            case 's':
-            {
-                char *temp = va_arg(args, char *);
-                int len = strlen(temp);
+                    nbuf += len;
+                    fmt++;
+                    header += 2;
+                    break;
+                }
+                case 's': {
+                    char *temp = va_arg(args, char *);
+                    int len = strlen(temp);
 #ifdef _WIN32
-                strcpy_s(nbuf, strlen(temp) + 1, temp);
+                    strcpy_s(nbuf, strlen(temp) + 1, temp);
 #elif __linux__
-                strcpy(nbuf, temp);
+                    strcpy(nbuf, temp);
 #endif
-                nbuf += len;
-                fmt++;
-                header += 2;
-                break;
-            }
-            case 'c':
-            {
-                int temp = va_arg(args, int);
-                *nbuf = (char)temp;
-                nbuf++;
-                fmt++;
-                header += 2;
-                break;
-            }
+                    nbuf += len;
+                    fmt++;
+                    header += 2;
+                    break;
+                }
+                case 'c': {
+                    int temp = va_arg(args, int);
+                    *nbuf = (char) temp;
+                    nbuf++;
+                    fmt++;
+                    header += 2;
+                    break;
+                }
             }
         }
     }
@@ -301,16 +287,14 @@ void Console::FormatWrite(char *buf, const char *fmt, va_list args)
     *nbuf = '\0';
 }
 
-void Console::Format(char *buf, const char *fmt, ...)
-{
+void Console::Format(char *buf, const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
     FormatWrite(buf, fmt, args);
     va_end(args);
 }
 
-void Console::Write(const char *fmt, ...)
-{
+void Console::Write(const char *fmt, ...) {
     char temp[1024];
     va_list args;
     va_start(args, fmt);
@@ -319,43 +303,37 @@ void Console::Write(const char *fmt, ...)
     Print(temp);
 }
 
-void Console::Read(const char *fmt, ...)
-{
+void Console::Read(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
     vscanf(fmt, args);
     va_end(args);
 }
 
-void Console::Put(long l, int radix)
-{
+void Console::Put(long l, int radix) {
     char temp[33];
     ltoa(l, temp, radix);
     Print(temp);
 }
 
-void Console::Put(double d)
-{
+void Console::Put(double d) {
     char temp[33];
     sprintf(temp, "%lf", d);
     Print(temp);
 }
 
-void Console::Put(char c)
-{
+void Console::Put(char c) {
     char temp[2]{c, '\0'};
     Print(temp);
 }
 
-void Console::NewLine()
-{
+void Console::NewLine() {
     Print("\n");
 }
 
-void Console::SetColor(Colors fontColor)
-{
+void Console::SetColor(Colors fontColor) {
 #ifdef _WIN32
-    SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD)fontColor);
+    SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD) fontColor);
 #elif __linux__
     char font[3];
     ltoa((long)fontColor, font, 10);
@@ -364,10 +342,9 @@ void Console::SetColor(Colors fontColor)
 #endif
 }
 
-void Console::SetColor(Colors fontColor, Colors bkColor)
-{
+void Console::SetColor(Colors fontColor, Colors bkColor) {
 #ifdef _WIN32
-    SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD)bkColor * 0x10 | (WORD)fontColor);
+    SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD) bkColor * 0x10 | (WORD) fontColor);
 #elif __linux__
     char bk[3];
     ltoa((long)bkColor + 10, bk, 10);
@@ -379,17 +356,15 @@ void Console::SetColor(Colors fontColor, Colors bkColor)
 #endif
 }
 
-void Console::ClearColor()
-{
+void Console::ClearColor() {
 #ifdef _WIN32
-    SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD)Colors::White);
+    SetConsoleTextAttribute(IO::GetOutputHandle(), (WORD) Colors::White);
 #elif __linux__
     Print("\033[0m");
 #endif
 }
 
-void Console::WriteColorful(const char *str, Colors fontColor)
-{
+void Console::WriteColorful(const char *str, Colors fontColor) {
 #ifdef _WIN32
     SetColor(fontColor);
     Print(str);
@@ -402,8 +377,7 @@ void Console::WriteColorful(const char *str, Colors fontColor)
 #endif
 }
 
-void Console::WriteColorful(const char *str, Colors fontColor, Colors bkColor)
-{
+void Console::WriteColorful(const char *str, Colors fontColor, Colors bkColor) {
 #ifdef _WIN32
     SetColor(fontColor, bkColor);
     Print(str);

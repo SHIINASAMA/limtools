@@ -11,15 +11,12 @@
 
 #include "File.hpp"
 
-File::File()
-{
+File::File() {
 }
 
-File::~File()
-{
+File::~File() {
 #ifdef _WIN32
-    if (this->id != INVALID_HANDLE_VALUE)
-    {
+    if (this->id != INVALID_HANDLE_VALUE) {
         Close();
     }
 #elif __linux__
@@ -30,36 +27,29 @@ File::~File()
 #endif
 }
 
-bool File::Open(const char *path, AccessMode accessMode, OpenMode openMode)
-{
+bool File::Open(const char *path, AccessMode accessMode, OpenMode openMode) {
 #ifdef _WIN32
-    if (this->id != INVALID_HANDLE_VALUE)
-    {
+    if (this->id != INVALID_HANDLE_VALUE) {
         return false;
     }
 
     DWORD l;
-    if (accessMode == AccessMode::READ)
-    {
+    if (accessMode == AccessMode::READ) {
         l = GENERIC_READ;
     }
-    else if (accessMode == AccessMode::WRITE)
-    {
+    else if (accessMode == AccessMode::WRITE) {
         l = GENERIC_WRITE;
     }
-    else
-    {
+    else {
         l = GENERIC_WRITE | GENERIC_READ;
     }
 
     ID temp = CreateFile(path, l, NULL, NULL, (DWORD) openMode, FILE_ATTRIBUTE_NORMAL, NULL);
-    if (temp != INVALID_HANDLE_VALUE)
-    {
+    if (temp != INVALID_HANDLE_VALUE) {
         this->id = temp;
         return true;
     }
-    else
-    {
+    else {
         return false;
     }
 #elif __linux__
@@ -133,16 +123,13 @@ bool File::Open(const char *path, AccessMode accessMode, OpenMode openMode)
 #endif
 }
 
-int File::Write(void *buf, int len)
-{
+int File::Write(void *buf, int len) {
 #ifdef _WIN32
     DWORD writtenLen;
-    if (WriteFile(this->id, buf, len, &writtenLen, NULL))
-    {
+    if (WriteFile(this->id, buf, len, &writtenLen, NULL)) {
         return (int) writtenLen;
     }
-    else
-    {
+    else {
         return -1;
     }
 #elif __linux__
@@ -150,16 +137,13 @@ int File::Write(void *buf, int len)
 #endif
 }
 
-int File::Read(void *buf, int len)
-{
+int File::Read(void *buf, int len) {
 #ifdef _WIN32
     DWORD readLen;
-    if (ReadFile(this->id, buf, len, &readLen, NULL))
-    {
+    if (ReadFile(this->id, buf, len, &readLen, NULL)) {
         return (int) readLen;
     }
-    else
-    {
+    else {
         return -1;
     }
 #elif __linux__
@@ -167,8 +151,7 @@ int File::Read(void *buf, int len)
 #endif
 }
 
-void File::SetOffset(long pos)
-{
+void File::SetOffset(long pos) {
 #ifdef _WIN32
     SetFilePointer(this->id, pos, 0, 0);
 #elif __linux__
@@ -176,8 +159,7 @@ void File::SetOffset(long pos)
 #endif
 }
 
-void File::SetOffset(SeekPos pos)
-{
+void File::SetOffset(SeekPos pos) {
 #ifdef _WIN32
     SetFilePointer(this->id, 0, 0, (DWORD) pos);
 #elif __linux__
@@ -185,8 +167,7 @@ void File::SetOffset(SeekPos pos)
 #endif
 }
 
-void File::MoveOffset(long pos)
-{
+void File::MoveOffset(long pos) {
 #ifdef _WIN32
     SetFilePointer(this->id, pos, 0, FILE_CURRENT);
 #elif __linux__
@@ -194,8 +175,7 @@ void File::MoveOffset(long pos)
 #endif
 }
 
-long File::GetOffset()
-{
+long File::GetOffset() {
 #ifdef _WIN32
     return SetFilePointer(this->id, 0, 0, FILE_CURRENT);
 #elif __linux__
@@ -203,8 +183,7 @@ long File::GetOffset()
 #endif
 }
 
-void File::Close()
-{
+void File::Close() {
 #ifdef _WIN32
     CloseHandle(this->id);
     this->id = INVALID_HANDLE_VALUE;
@@ -214,8 +193,7 @@ void File::Close()
 #endif
 }
 
-long File::GetFileLength()
-{
+long File::GetFileLength() {
 #ifdef _WIN32
     long pos = SetFilePointer(this->id, 0, 0, FILE_CURRENT);
     long end = SetFilePointer(this->id, 0, 0, FILE_END);

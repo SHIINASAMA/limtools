@@ -16,8 +16,7 @@
  * @brief 连接模式
  * 
  */
-enum class SocketMode
-{
+enum class SocketMode {
     /**
      * @brief 作为服务端
      * 
@@ -34,8 +33,7 @@ enum class SocketMode
  * @brief 断开模式
  * 
  */
-enum class ShutdownMode
-{
+enum class ShutdownMode {
     /**
      * @brief 断开读
      * 
@@ -54,16 +52,16 @@ enum class ShutdownMode
 };
 
 #ifdef _WIN32
+
 #include "SocketManager.hpp"
 
 /**
  * @brief 套接字类
  * 
  */
-class Socket
-{
+class Socket {
 private:
-    static SocketManager* manager;
+    static SocketManager *manager;
 
 protected:
     SOCKET sock;
@@ -71,6 +69,7 @@ protected:
 
 public:
     Socket();
+
     /**
      * @brief 初始化套接字
      * 
@@ -151,6 +150,7 @@ public:
      */
     static int GetHostByName(char *buf[], int size, const char *domain);
 };
+
 #endif
 
 #ifdef __linux__

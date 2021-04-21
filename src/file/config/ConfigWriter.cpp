@@ -11,18 +11,15 @@
 
 #include "ConfigWriter.hpp"
 
-bool ConfigWriter::Write(char *path, std::map<char *, char *, cmp> *propertyMap)
-{
+bool ConfigWriter::Write(char *path, std::map<char *, char *, cmp> *propertyMap) {
     File file;
-    if (!file.Open(path, AccessMode::WRITE, OpenMode::CREATE))
-    {
+    if (!file.Open(path, AccessMode::WRITE, OpenMode::CREATE)) {
         return false;
     }
 
     ConfigProperty property;
     char buf[130];
-    for (auto i = propertyMap->begin(); i != propertyMap->end(); i++)
-    {
+    for (auto i = propertyMap->begin(); i != propertyMap->end(); i++) {
 #ifdef _WIN32
         strcpy_s(property.Name, i->first);
         strcpy_s(property.Value, i->second);

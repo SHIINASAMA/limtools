@@ -11,7 +11,6 @@
 
 #include "Task.hpp"
 
-void Task::SetArgs(void *args)
-{
+void Task::SetArgs(void *args) {
     this->args = args;
 }

@@ -11,11 +11,9 @@
 
 #include "ThreadGroup.hpp"
 
-ThreadGroup::ThreadGroup()
-{
+ThreadGroup::ThreadGroup() {
 }
 
-void ThreadGroup::Add(SafeThread *thread)
-{
+void ThreadGroup::Add(SafeThread *thread) {
     thread->SetMutex(&this->mutex);
 }

@@ -20,8 +20,7 @@
  * @brief Config文件读取类
  * 
  */
-class ConfigReader
-{
+class ConfigReader {
 public:
     /**
      * @brief 从文件中读取Config

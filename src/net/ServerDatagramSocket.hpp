@@ -18,8 +18,7 @@
  * @brief 广播服务端
  * 
  */
-class ServerDatagramSocket : public DatagramSocket
-{
+class ServerDatagramSocket : public DatagramSocket {
 public:
     /**
      * @brief 初始化广播服务端类

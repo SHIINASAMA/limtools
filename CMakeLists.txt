@@ -8,6 +8,7 @@ add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(template)
 
+set(CMAKE_CXX_STANDARD 11)
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)

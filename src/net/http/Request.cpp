@@ -11,8 +11,7 @@
 
 #include "Request.hpp"
 
-Request::Request(const char *url, const char *ipaddr, unsigned short port)
-{
+Request::Request(const char *url, const char *ipaddr, unsigned short port) {
 #ifdef _WIN32
     strcpy_s(this->url, url);
     strcpy_s(this->ipaddr, ipaddr);
@@ -23,16 +22,13 @@ Request::Request(const char *url, const char *ipaddr, unsigned short port)
     this->port = port;
 }
 
-Request::~Request()
-{
-    if (this->response != nullptr)
-    {
+Request::~Request() {
+    if (this->response != nullptr) {
         delete this->response;
     }
 }
 
-Response *Request::Get()
-{
+Response *Request::Get() {
     //请求行以及参数
     char request_line[1024]{0};
     sprintf(request_line, "GET %s HTTP/1.1\r\n", this->url);
@@ -41,14 +37,12 @@ Response *Request::Get()
 
     //连接服务器
     auto socket = new Socket(SocketMode::Client, this->ipaddr, this->port);
-    if (socket->Connect())
-    {
+    if (socket->Connect()) {
         return nullptr;
     }
 
     //发送请求头
-    if (!socket->Write(this->Args.c_str(), this->Args.length()))
-    {
+    if (!socket->Write(this->Args.c_str(), this->Args.length())) {
         return nullptr;
     }
 
@@ -58,10 +52,8 @@ Response *Request::Get()
 
     //报文头
     int status_line_length = 0;
-    for (int i = 0; i < recv_length; i++)
-    {
-        if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n')
-        {
+    for (int i = 0; i < recv_length; i++) {
+        if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n') {
             status_line_length = i + 1;
             break;
         }
@@ -77,17 +69,14 @@ Response *Request::Get()
     int prepos = status_line_length + 1;
     int pos1 = prepos;
     int pos2 = prepos;
-    for (int i = prepos; i < recv_length; i++)
-    {
+    for (int i = prepos; i < recv_length; i++) {
         //键值分割点
-        if (recv_buf[i] == ':' && recv_buf[i + 1] == ' ')
-        {
+        if (recv_buf[i] == ':' && recv_buf[i + 1] == ' ') {
             pos1 = i - 1;
             i += 2;
         }
-        //行末
-        else if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n')
-        {
+            //行末
+        else if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n') {
             prepos = pos2;
             pos2 = i + 2;
             i += 2;
@@ -104,8 +93,7 @@ Response *Request::Get()
 
             this->response->Args.insert(std::make_pair(key, value));
 
-            if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n')
-            {
+            if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n') {
                 header_length = i + 2;
                 break;
             }
@@ -113,29 +101,24 @@ Response *Request::Get()
     }
 
     //读取不完整，做失败处理
-    if (header_length == 0)
-    {
+    if (header_length == 0) {
         return nullptr;
     }
 
-    if (this->response->Args.count((char *)"Content-Length") == 1)
-    {
-        this->response->ContentLength = atol(this->response->Args[(char *)"Content-Length"]);
+    if (this->response->Args.count((char *) "Content-Length") == 1) {
+        this->response->ContentLength = atol(this->response->Args[(char *) "Content-Length"]);
         this->response->Content = new char[this->response->ContentLength + 1];
 
         //报头完整且包含正文
-        if (recv_length - header_length >= 0)
-        {
+        if (recv_length - header_length >= 0) {
             memcpy(this->response->Content, &recv_buf[header_length], recv_length - header_length);
         }
 
         //循环读取避免超过最大长度
         int surplus_length = this->response->ContentLength - (recv_length - header_length);
-        while (surplus_length)
-        {
+        while (surplus_length) {
             int l = socket->Read(&this->response->Content[this->response->ContentLength - surplus_length], 4096);
-            if (!l)
-            {
+            if (!l) {
                 return nullptr;
             }
 
@@ -149,8 +132,7 @@ Response *Request::Get()
     return this->response;
 }
 
-Response *Request::Post(const char *content, int size)
-{
+Response *Request::Post(const char *content, int size) {
     //请求行以及参数
     char request_line[1024]{0};
     sprintf(request_line, "POST %s HTTP/1.1\r\n", this->url);
@@ -159,20 +141,17 @@ Response *Request::Post(const char *content, int size)
 
     //连接服务器
     auto socket = new Socket(SocketMode::Client, this->ipaddr, this->port);
-    if (socket->Connect())
-    {
+    if (socket->Connect()) {
         return nullptr;
     }
 
     //发送请求头
-    if (!socket->Write(this->Args.c_str(), this->Args.length()))
-    {
+    if (!socket->Write(this->Args.c_str(), this->Args.length())) {
         return nullptr;
     }
 
     //POST报文
-    if (!socket->Write(content, size))
-    {
+    if (!socket->Write(content, size)) {
         return nullptr;
     }
 
@@ -182,10 +161,8 @@ Response *Request::Post(const char *content, int size)
 
     //报文头
     int status_line_length = 0;
-    for (int i = 0; i < recv_length; i++)
-    {
-        if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n')
-        {
+    for (int i = 0; i < recv_length; i++) {
+        if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n') {
             status_line_length = i + 1;
             break;
         }
@@ -201,17 +178,14 @@ Response *Request::Post(const char *content, int size)
     int pre_pos = status_line_length + 1;
     int pos1 = pre_pos;
     int pos2 = pre_pos;
-    for (int i = pre_pos; i < recv_length; i++)
-    {
+    for (int i = pre_pos; i < recv_length; i++) {
         //键值分割点
-        if (recv_buf[i] == ':' && recv_buf[i + 1] == ' ')
-        {
+        if (recv_buf[i] == ':' && recv_buf[i + 1] == ' ') {
             pos1 = i - 1;
             i += 2;
         }
-        //行末
-        else if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n')
-        {
+            //行末
+        else if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n') {
             pre_pos = pos2;
             pos2 = i + 2;
             i += 2;
@@ -228,8 +202,7 @@ Response *Request::Post(const char *content, int size)
 
             this->response->Args.insert(std::make_pair(key, value));
 
-            if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n')
-            {
+            if (recv_buf[i] == '\r' && recv_buf[i + 1] == '\n') {
                 header_length = i + 2;
                 break;
             }
@@ -237,29 +210,24 @@ Response *Request::Post(const char *content, int size)
     }
 
     //读取不完整，做失败处理
-    if (header_length == 0)
-    {
+    if (header_length == 0) {
         return nullptr;
     }
 
-    if (this->response->Args.count((char *)"Content-Length") == 1)
-    {
-        this->response->ContentLength = atol(this->response->Args[(char *)"Content-Length"]);
+    if (this->response->Args.count((char *) "Content-Length") == 1) {
+        this->response->ContentLength = atol(this->response->Args[(char *) "Content-Length"]);
         this->response->Content = new char[this->response->ContentLength + 1];
 
         //报头完整且包含正文
-        if (recv_length - header_length >= 0)
-        {
+        if (recv_length - header_length >= 0) {
             memcpy(this->response->Content, &recv_buf[header_length], recv_length - header_length);
         }
 
         //循环读取避免超过最大长度
         int surplus_length = this->response->ContentLength - (recv_length - header_length);
-        while (surplus_length)
-        {
+        while (surplus_length) {
             int l = socket->Read(&this->response->Content[this->response->ContentLength - surplus_length], 4096);
-            if (!l)
-            {
+            if (!l) {
                 return nullptr;
             }
 
@@ -273,8 +241,7 @@ Response *Request::Post(const char *content, int size)
     return this->response;
 }
 
-void Request::SetArg(const char *key, const char *value)
-{
+void Request::SetArg(const char *key, const char *value) {
     char buf[512]{0};
     sprintf(buf, "%s: %s\r\n", key, value);
     Args.append(buf);

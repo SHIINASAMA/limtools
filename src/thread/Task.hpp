@@ -16,8 +16,7 @@
  * @brief 任务类
  * 
  */
-class Task
-{
+class Task {
 protected:
     void *args = nullptr;
 

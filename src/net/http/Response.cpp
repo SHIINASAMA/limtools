@@ -11,23 +11,18 @@
 
 #include "Response.hpp"
 
-Response::Response()
-{
+Response::Response() {
 }
 
-Response::~Response()
-{
-    if (this->ContentLength != 0)
-    {
+Response::~Response() {
+    if (this->ContentLength != 0) {
         delete[] this->Content;
     }
 
-    if (this->Args.size() != 0)
-    {
-        for (auto itor = this->Args.begin(); itor != this->Args.end(); itor++)
-        {
-            delete [] itor->first;
-            delete [] itor->second;
+    if (this->Args.size() != 0) {
+        for (auto itor = this->Args.begin(); itor != this->Args.end(); itor++) {
+            delete[] itor->first;
+            delete[] itor->second;
         }
         this->Args.clear();
     }

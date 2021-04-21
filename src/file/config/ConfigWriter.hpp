@@ -20,8 +20,7 @@
  * @brief Config文件写入类
  * 
  */
-class ConfigWriter
-{
+class ConfigWriter {
 public:
     /**
      * @brief 向文件写入Config

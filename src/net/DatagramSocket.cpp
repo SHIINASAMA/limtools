@@ -11,9 +11,8 @@
 
 #include "DatagramSocket.hpp"
 
-DatagramSocket::DatagramSocket(SocketMode mode,const char *ipaddr, unsigned short port)
-    : Socket()
-{
+DatagramSocket::DatagramSocket(SocketMode mode, const char *ipaddr, unsigned short port)
+        : Socket() {
     this->sock = ::socket(AF_INET, SOCK_DGRAM, 0);
     this->sin.sin_family = AF_INET;
 #ifdef _WIN32
@@ -22,28 +21,24 @@ DatagramSocket::DatagramSocket(SocketMode mode,const char *ipaddr, unsigned shor
     this->sin.sin_addr.s_addr = inet_addr(ipaddr);
 #endif
     this->sin.sin_port = htons(port);
-    if (mode == SocketMode::Server)
-    {
-        bind(this->sock, (sockaddr *)&this->sin, sizeof(sockaddr));
+    if (mode == SocketMode::Server) {
+        bind(this->sock, (sockaddr *) &this->sin, sizeof(sockaddr));
     }
 }
 
-int DatagramSocket::Write(char *buffer, int size)
-{
-    return sendto(this->sock, buffer, size, 0, (sockaddr *)&this->sin, sizeof(sockaddr));
+int DatagramSocket::Write(char *buffer, int size) {
+    return sendto(this->sock, buffer, size, 0, (sockaddr *) &this->sin, sizeof(sockaddr));
 }
 
-int DatagramSocket::Read(char *buffer, int size)
-{
+int DatagramSocket::Read(char *buffer, int size) {
 #ifdef _WIN32
     int len = sizeof(sockaddr);
 #elif __linux__
     socklen_t len = sizeof(sockaddr);
 #endif
-    return recvfrom(this->sock, buffer, size, 0, (sockaddr *)&this->sin, &len);
+    return recvfrom(this->sock, buffer, size, 0, (sockaddr *) &this->sin, &len);
 }
 
-int DatagramSocket::Close()
-{
+int DatagramSocket::Close() {
     return Socket::Close();
 }

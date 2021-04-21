@@ -19,8 +19,7 @@
  * @brief 安全线程
  * 
  */
-class SafeThread : public Thread
-{
+class SafeThread : public Thread {
 protected:
     std::mutex *mutex = nullptr;
 

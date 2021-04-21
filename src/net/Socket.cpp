@@ -13,93 +13,76 @@
 
 #ifdef _WIN32
 
-SocketManager* Socket::manager = new SocketManager();
+SocketManager *Socket::manager = new SocketManager();
 
-Socket::Socket()
-{
+Socket::Socket() {
 }
 
-Socket::Socket(SocketMode mode, const char *ipaddr, unsigned short port)
-{
+Socket::Socket(SocketMode mode, const char *ipaddr, unsigned short port) {
     this->sock = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     this->sin.sin_family = AF_INET;
     this->sin.sin_addr.s_addr = inet_addr(ipaddr);
     this->sin.sin_port = htons(port);
 
-    if (mode == SocketMode::Server)
-    {
+    if (mode == SocketMode::Server) {
         bind(this->sock, (SOCKADDR *) &this->sin, sizeof(SOCKADDR));
     }
 }
 
-int Socket::Listen(int backlog)
-{
+int Socket::Listen(int backlog) {
     return listen(this->sock, backlog);
 }
 
-Socket::~Socket()
-{
+Socket::~Socket() {
     this->Close();
 }
 
-int Socket::Read(char *buffer, int size)
-{
+int Socket::Read(char *buffer, int size) {
     return recv(this->sock, buffer, size, NULL);
 }
 
-int Socket::Write(const char *buffer, int size)
-{
+int Socket::Write(const char *buffer, int size) {
     return send(this->sock, buffer, size, NULL);
 }
 
-Socket Socket::Accept()
-{
+Socket Socket::Accept() {
     Socket res;
     int len = sizeof(SOCKADDR);
     res.sock = accept(this->sock, (SOCKADDR *) &res.sin, &len);
     return res;
 }
 
-int Socket::Connect()
-{
+int Socket::Connect() {
     return connect(this->sock, (SOCKADDR *) &this->sin, sizeof(SOCKADDR));
 }
 
-int Socket::Shutdown(ShutdownMode mode)
-{
+int Socket::Shutdown(ShutdownMode mode) {
     return shutdown(this->sock, (int) mode);
 }
 
-int Socket::Close()
-{
+int Socket::Close() {
     return closesocket(this->sock);
 }
 
-int Socket::GetHostByName(char *buf[], int size, const char *domain)
-{
+int Socket::GetHostByName(char *buf[], int size, const char *domain) {
     Socket sock;
     auto hosts = gethostbyname(domain);
-    if (hosts == nullptr)
-    {
+    if (hosts == nullptr) {
         return -1;
     }
 
-    if (hosts->h_addrtype == AF_INET6)
-    {
+    if (hosts->h_addrtype == AF_INET6) {
         return -2;
     }
 
     int count = 0;
-    for (char *pt = hosts->h_addr_list[0]; pt != NULL; pt = hosts->h_addr_list[++count])
-    {
-        if (count < size)
-        {
+    for (char *pt = hosts->h_addr_list[0]; pt != NULL; pt = hosts->h_addr_list[++count]) {
+        if (count < size) {
             in_addr in{};
             in.S_un.S_addr = *(u_long *) pt;
             buf[count] = inet_ntoa(in);
         }
-        else
-        {
+        else {
             break;
         }
     }

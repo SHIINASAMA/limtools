@@ -18,8 +18,7 @@
  * @brief 线程组
  * 
  */
-class ThreadGroup
-{
+class ThreadGroup {
 protected:
     std::mutex mutex;
 

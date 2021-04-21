@@ -29,8 +29,7 @@
  * @brief 访问模式
  * 
  */
-enum class AccessMode
-{
+enum class AccessMode {
 #ifdef _WIN32
     READ,
     WRITE,
@@ -46,8 +45,7 @@ enum class AccessMode
  * @brief 打开模式
  * 
  */
-enum class OpenMode
-{
+enum class OpenMode {
 #ifdef _WIN32
     /**
      * @brief 文件存在则报错
@@ -87,8 +85,7 @@ enum class OpenMode
  * @brief Seek定位位置
  * 
  */
-enum class SeekPos
-{
+enum class SeekPos {
 #ifdef _WIN32
     /**
      * @brief 文件开头
@@ -118,8 +115,7 @@ enum class SeekPos
  * @brief 文件类
  * 
  */
-class File
-{
+class File {
 protected:
 #ifdef _WIN32
     ID id = INVALID_HANDLE_VALUE;

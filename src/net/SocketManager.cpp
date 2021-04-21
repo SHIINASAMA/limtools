@@ -15,10 +15,8 @@
 
 int SocketManager::StatusCode = -1;
 
-SocketManager::SocketManager()
-{
-    if (StatusCode == 0)
-    {
+SocketManager::SocketManager() {
+    if (StatusCode == 0) {
         return;
     }
 
@@ -26,9 +24,8 @@ SocketManager::SocketManager()
     StatusCode = WSAStartup(MAKEWORD(2, 2), &wsaData);
 }
 
-SocketManager::~SocketManager()
-{
-    if(StatusCode != 0){
+SocketManager::~SocketManager() {
+    if (StatusCode != 0) {
         return;
     }
 

@@ -13,10 +13,12 @@
 #define _CONSOLE_HPP_
 
 #ifdef _WIN32
+
 #include "IO.hpp"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+
 #define ltoa(value, buf, radix) _ltoa_s(value, buf, 32, radix)
 #elif __linux__
 #include <stdio.h>
@@ -31,8 +33,7 @@
  * @brief 控制台库
  * 
  */
-class Console
-{
+class Console {
 private:
     static void FormatWrite(char *buf, const char *fmt, va_list args);
 
@@ -101,8 +102,7 @@ public:
      * @brief 颜色枚举
      * 
      */
-    enum class Colors
-    {
+    enum class Colors {
 #ifdef _WIN32
         Black = 0x0,
         Blue = 0x1,

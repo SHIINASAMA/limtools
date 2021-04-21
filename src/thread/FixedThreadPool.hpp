@@ -22,8 +22,7 @@
  * @brief 线程命令枚举
  * 
  */
-enum class Commands
-{
+enum class Commands {
     /**
      * @brief 暂停执行
      * 
@@ -59,8 +58,7 @@ static bool hasRes = false;
  * @brief 不可变线程池
  * 
  */
-class FixedThreadPool
-{
+class FixedThreadPool {
 protected:
     int threadNum = 0;
 

@@ -18,8 +18,7 @@
  * @brief 广播类
  * 
  */
-class Broadcast :  Socket
-{
+class Broadcast : Socket {
 public:
     /**
      * @brief 初始化广播类
@@ -28,7 +27,7 @@ public:
      * @param port 目标端口
      */
     Broadcast(SocketMode mode, unsigned short port);
-    
+
     /**
      * @brief 写入数据
      * 

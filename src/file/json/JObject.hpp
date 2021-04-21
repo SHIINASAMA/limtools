@@ -20,8 +20,7 @@
  * @brief Json数据类型
  * 
  */
-enum class JObjectType
-{
+enum class JObjectType {
     /**
      * @brief Json对象
      * 
@@ -57,8 +56,7 @@ enum class JObjectType
  * @brief Json对象类
  * 
  */
-class JObject
-{
+class JObject {
 private:
     static bool isSpace(char ch);
 

@@ -22,8 +22,7 @@
 /**
  * @brief 负责在 Windows 下进行初始化管理的专有类
  */
-class SocketManager
-{
+class SocketManager {
 public:
     /**
      * @brief 网络模块初始化状态码

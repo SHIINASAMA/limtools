@@ -19,8 +19,7 @@
  * @brief 线程类
  * 
  */
-class Thread
-{
+class Thread {
 protected:
     std::thread worker;
 

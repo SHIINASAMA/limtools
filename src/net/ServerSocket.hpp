@@ -18,8 +18,7 @@
  * @brief Socket服务端
  * 
  */
-class ServerSocket : public Socket
-{
+class ServerSocket : public Socket {
 public:
     /**
      * @brief Socket服务端初始化
